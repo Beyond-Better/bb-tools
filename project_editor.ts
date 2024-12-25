@@ -42,4 +42,12 @@ export interface IProjectEditor {
       metadata: Omit<FileMetadata, 'path'>;
     }>
   >;
+
+  resolveProjectFilePath(
+    filePath: string,
+  ): Promise<string>;
+
+  isPathWithinProject(
+    filePath: string,
+  ): Promise<boolean>;
 }

@@ -1,16 +1,16 @@
-export interface LLMToolOpenUrlsInput {
+export interface LLMToolOpenInBrowserInput {
   urls: string[];
   browser?: string;
 }
 
-export interface LLMToolOpenUrlsResponseData {
+export interface LLMToolOpenInBrowserResponseData {
   data: {
     opensSuccess: string[];
     opensError: string[];
   };
 }
 
-export interface LLMToolOpenUrlsResult {
+export interface LLMToolOpenInBrowserResult {
   toolResult: unknown;
-  bbResponse: LLMToolOpenUrlsResponseData;
+  bbResponse: LLMToolOpenInBrowserResponseData;
 }

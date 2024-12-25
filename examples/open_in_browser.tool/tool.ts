@@ -7,7 +7,7 @@ import LLMTool, {
   type LLMToolLogEntryFormattedResult,
   type LLMToolRunResult,
 } from 'jsr:@beyondbetter/tools';
-import open, { apps } from 'npm:open';
+import open, { apps } from 'npm:open@10.1.0';
 
 import {
   formatLogEntryToolResult as formatLogEntryToolResultBrowser,
@@ -17,7 +17,7 @@ import {
   formatLogEntryToolResult as formatLogEntryToolResultConsole,
   formatLogEntryToolUse as formatLogEntryToolUseConsole,
 } from './formatter.console.ts';
-import type { LLMToolOpenUrlsInput, LLMToolOpenUrlsResult } from './types.ts';
+import type { LLMToolOpenInBrowserInput, LLMToolOpenInBrowserResult } from './types.ts';
 
 export default class LLMToolOpenInBrowser extends LLMTool {
   private readonly predefinedBrowsers = ['chrome', 'firefox', 'edge', 'safari'] as const;
@@ -55,7 +55,7 @@ export default class LLMToolOpenInBrowser extends LLMTool {
   }
 
   formatLogEntryToolResult(
-    resultContent: unknown,
+    resultContent: LLMToolOpenInBrowserResult,
     format: 'console' | 'browser',
   ): LLMToolLogEntryFormattedResult {
     return format === 'console'
@@ -89,7 +89,7 @@ export default class LLMToolOpenInBrowser extends LLMTool {
 
       return `Successfully sent command to open ${url} in ${useBrowser}`;
     } catch (error) {
-      throw new Error(`Failed to open URL ${url}: ${error.message}`);
+      throw new Error(`Failed to open URL ${url}: ${(error as Error).message}`);
     }
   }
 
@@ -116,7 +116,7 @@ export default class LLMToolOpenInBrowser extends LLMTool {
     toolUse: LLMAnswerToolUse,
     projectEditor: IProjectEditor,
   ): Promise<LLMToolRunResult> {
-    const input = toolUse.toolInput as LLMToolOpenUrlsInput;
+    const input = toolUse.toolInput as unknown as LLMToolOpenInBrowserInput;
     const { urls, browser = 'default' } = input;
     // console.log('OpenInBrowserTool: ', { urls, browser });
     if (urls.length > this.maxUrls) {
@@ -142,9 +142,9 @@ export default class LLMToolOpenInBrowser extends LLMTool {
       } catch (error) {
         toolResultContentParts.push({
           'type': 'text',
-          'text': `Error opening URL ${url} - ${error.message}\n`,
+          'text': `Error opening URL ${url} - ${(error as Error).message}\n`,
         });
-        opensError.push({ url, error: error.message });
+        opensError.push({ url, error: (error as Error).message });
       }
     }
 

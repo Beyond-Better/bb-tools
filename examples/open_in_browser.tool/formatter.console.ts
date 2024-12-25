@@ -3,13 +3,12 @@ import LLMTool, {
   type LLMToolInputSchema,
   type LLMToolLogEntryFormattedResult,
 } from 'jsr:@beyondbetter/tools';
-import type { OpenInBrowserInput } from './tool.ts';
-import type { LLMToolOpenUrlsInput, LLMToolOpenUrlsResult } from './types.ts';
+import type { LLMToolOpenInBrowserInput, LLMToolOpenInBrowserResult } from './types.ts';
 
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
 ): LLMToolLogEntryFormattedResult {
-  const { urls, browser = 'default' } = toolInput as LLMToolOpenUrlsInput;
+  const { urls, browser = 'default' } = toolInput as LLMToolOpenInBrowserInput;
 
   return {
     title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'Open in Browser'),
@@ -31,12 +30,12 @@ export function formatLogEntryToolUse(
 }
 
 export const formatLogEntryToolResult = (
-  resultContent: ConversationLogEntryContentToolResult,
+  resultContent: LLMToolOpenInBrowserResult,
 ): LLMToolLogEntryFormattedResult => {
   const { bbResponse } = resultContent;
 
   if (typeof bbResponse === 'object' && 'data' in bbResponse) {
-    const { data } = bbResponse as LLMToolOpenUrlsResult['bbResponse'];
+    const { data } = bbResponse as LLMToolOpenInBrowserResult['bbResponse'];
 
     const contentParts = [];
 
@@ -68,7 +67,7 @@ export const formatLogEntryToolResult = (
         : 'No URLs opened',
     };
   } else {
-    logger.error('LLMToolOpenInBrowser: Unexpected bbResponse format:', bbResponse);
+    console.error('LLMToolOpenInBrowser: Unexpected bbResponse format:', bbResponse);
     return {
       title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Result', 'Open in Browser'),
       subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle('Error'),

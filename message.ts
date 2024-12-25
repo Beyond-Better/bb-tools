@@ -52,9 +52,14 @@ export type LLMMessageContentPart =
 /** Array of content parts */
 export type LLMMessageContentParts = LLMMessageContentPart[];
 
+export interface LLMToolResult {
+  toolResult: unknown;
+  bbResponse: { data: unknown };
+}
+
 /** Tool use information */
 export interface LLMAnswerToolUse {
   id: string;
   name: string;
-  toolInput: Record<string, unknown>;
+  toolInput: LLMToolResult;
 }

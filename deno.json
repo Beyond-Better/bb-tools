@@ -6,7 +6,8 @@
     ".": "./mod.ts",
     "./llm-tools": "./llm_tool.ts",
     "./examples": "./examples/mod.ts",
-    "./examples/search_project": "./examples/search_project/mod.ts"
+    "./examples/open_in_browser": "./examples/open_in_browser.tool/tool.ts",
+    "./examples/search_project": "./examples/search_project.tool/tool.ts"
   },
   "tasks": {
     "publish": "deno publish",

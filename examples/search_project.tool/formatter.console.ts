@@ -89,16 +89,16 @@ export function formatLogEntryToolResult(
       ${
       hasErrors
         ? stripIndents`
-        ${LLMTool.TOOL_STYLES_CONSOLE.content.status('error', 'Errors')}
+        ${LLMTool.TOOL_STYLES_CONSOLE.status.error('Errors')}
         ${
           errorLines.map((error) =>
             LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
-              LLMTool.TOOL_STYLES_CONSOLE.content.error(error),
+              LLMTool.TOOL_STYLES_CONSOLE.status.error(error),
             )
           ).join('\n')
         }`
         : stripIndents`
-        ${LLMTool.TOOL_STYLES_CONSOLE.content.status('completed', 'Files Found')}
+        ${LLMTool.TOOL_STYLES_CONSOLE.status.success('Files Found')}
         ${
           fileList.map((file) =>
             LLMTool.TOOL_STYLES_CONSOLE.base.listItem(

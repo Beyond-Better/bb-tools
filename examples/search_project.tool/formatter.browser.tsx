@@ -109,7 +109,7 @@ export function formatLogEntryToolResult(
         {hasErrors
           ? (
             <>
-              {LLMTool.TOOL_TAGS_BROWSER.content.status('error', 'Errors')}
+              {LLMTool.TOOL_TAGS_BROWSER.content.error('Errors')}
               {LLMTool.TOOL_TAGS_BROWSER.base.list(
                 errorLines.map((error) => LLMTool.TOOL_TAGS_BROWSER.content.error(error)),
               )}
