@@ -102,7 +102,7 @@ abstract class LLMTool {
   ): LLMToolLogEntryFormattedResult;
 
   // Style constants for tool output formatting
-  static readonly TOOL_TAGS = TOOL_TAGS;
+  static readonly TOOL_TAGS_BROWSER = TOOL_TAGS;
   static readonly TOOL_STYLES_BROWSER = TOOL_STYLES_BROWSER;
   static readonly TOOL_STYLES_CONSOLE = TOOL_STYLES_CONSOLE;
 }
