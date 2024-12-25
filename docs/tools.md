@@ -1,7 +1,7 @@
 # BB Tools Reference
 
 This document provides a comprehensive reference for the BB tools framework,
-including tool types, interfaces, and implementation patterns.
+including tool types, interfaces, implementation patterns, and styling guidelines.
 
 ## Tool Framework Overview
 
@@ -12,6 +12,7 @@ used by AI assistants. Each tool:
 - Implements specific interfaces
 - Provides both browser and console formatting
 - Includes comprehensive testing
+- Contains tool metadata in info.json
 
 ## Core Components
 
@@ -158,41 +159,109 @@ class NetworkTool extends LLMTool {
 
 ### Browser Formatting
 
-Tools provide JSX-based formatting for browser display:
+Tools provide JSX-based formatting using TOOL_TAGS_BROWSER:
 
 ```typescript
-interface LLMToolLogEntryFormattedResult {
-  title: string | JSX.Element;
-  subtitle?: string | JSX.Element;
-  content: string | JSX.Element;
-  preview: string | JSX.Element;
-}
+/** @jsxImportSource preact */
+import LLMTool from "@beyondbetter/tools";
 
-// Example implementation
-formatLogEntryToolUse(toolInput: LLMToolInputSchema, format: 'browser'): JSX.Element {
-  return (
-    <div class={LLMTool.TOOL_STYLES_BROWSER.tool}>
-      <span class={LLMTool.TOOL_TAGS_BROWSER.tool}>
-        {this.name}
-      </span>
-      {/* Tool-specific formatting */}
-    </div>
-  );
+formatLogEntryToolUse(toolInput: LLMToolInputSchema): LLMToolLogEntryFormattedResult {
+  return {
+    title: LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'Your Tool'),
+    subtitle: LLMTool.TOOL_TAGS_BROWSER.content.subtitle('Processing...'),
+    content: LLMTool.TOOL_TAGS_BROWSER.base.container(
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Parameters')}
+        {LLMTool.TOOL_TAGS_BROWSER.base.list([
+          <>
+            {LLMTool.TOOL_TAGS_BROWSER.base.label('Parameter 1:')}
+            {' '}
+            {LLMTool.TOOL_TAGS_BROWSER.content.text('value')}
+          </>,
+          <>
+            {LLMTool.TOOL_TAGS_BROWSER.base.label('Status:')}
+            {' '}
+            {LLMTool.TOOL_TAGS_BROWSER.content.status('completed', 'Done')}
+          </>
+        ])}
+      </>
+    ),
+    preview: 'Tool execution preview'
+  };
 }
 ```
 
 ### Console Formatting
 
-Tools also provide text-based formatting for console output:
+Tools provide text-based formatting using TOOL_STYLES_CONSOLE:
 
 ```typescript
-formatLogEntryToolUse(toolInput: LLMToolInputSchema, format: 'console'): string {
-  const styles = LLMTool.TOOL_STYLES_CONSOLE;
-  return `${styles.tool}Tool: ${this.name}${styles.reset}
-Parameters:
-${JSON.stringify(toolInput, null, 2)}`;
+import { stripIndents } from 'common-tags';
+import LLMTool from "@beyondbetter/tools";
+
+formatLogEntryToolUse(toolInput: LLMToolInputSchema): LLMToolLogEntryFormattedResult {
+  return {
+    title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'Your Tool'),
+    subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle('Processing...'),
+    content: stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters')}
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
+        stripIndents`
+          ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameter 1:')} 
+          ${LLMTool.TOOL_STYLES_CONSOLE.content.text('value')}`
+      )}
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
+        stripIndents`
+          ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Status:')} 
+          ${LLMTool.TOOL_STYLES_CONSOLE.content.status('completed', 'Done')}`
+      )}`,
+    preview: 'Tool execution preview'
+  };
 }
 ```
+
+### Styling Components
+
+#### Browser Components
+
+- **Base Components**
+  - `container`: Wraps content in a styled container
+  - `label`: Displays a styled label
+  - `list`: Creates a styled list of items
+  - `text`: Basic text styling
+
+- **Content Components**
+  - `title`: Tool title with optional category
+  - `subtitle`: Secondary title or description
+  - `status`: Status indicators (completed, error, etc.)
+  - `error`: Error message styling
+  - `success`: Success message styling
+  - `filename`: File path styling
+  - `url`: URL styling
+  - `date`: Date formatting
+  - `size`: File size formatting
+  - `boolean`: Boolean value formatting
+  - `regex`: Regular expression formatting
+
+#### Console Components
+
+- **Base Components**
+  - `label`: Styled text labels
+  - `listItem`: Indented list items
+  - `text`: Basic text styling
+
+- **Content Components**
+  - `title`: Tool title with optional category
+  - `subtitle`: Secondary title or description
+  - `status`: Status indicators
+  - `error`: Error message styling
+  - `success`: Success message styling
+  - `filename`: File path styling
+  - `url`: URL styling
+  - `date`: Date formatting
+  - `size`: File size formatting
+  - `boolean`: Boolean value formatting
+  - `regex`: Regular expression formatting
 
 ## Implementation Patterns
 
@@ -271,6 +340,16 @@ async runTool(...): Promise<LLMToolRunResult> {
    - Implement timeouts
    - Handle large inputs
    - Cache when appropriate
+
+5. **Formatting**
+   - Use appropriate styling constants
+   - Structure content logically
+   - Handle error states consistently
+   - Provide clear visual hierarchy
+   - Use JSX fragments for browser components
+   - Use stripIndents for console output
+   - Include meaningful labels
+   - Format specialized content types
 
 ## See Also
 

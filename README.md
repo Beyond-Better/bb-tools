@@ -7,11 +7,12 @@ tools that can be used with the BB AI assistant.
 ## Features
 
 - Base tool class with standardized interfaces
-- Browser and console formatting support
+- Browser and console formatting with consistent styling
 - Comprehensive type definitions
 - Project and conversation management interfaces
 - Built-in input validation using JSON Schema
 - Extensive testing utilities
+- Tool metadata and examples support
 
 ## Installation
 
@@ -25,15 +26,45 @@ import { LLMTool } from "jsr:@beyondbetter/tools";
 
 ## Quick Start
 
-1. Create a new tool:
+1. Create tool structure:
+
+```
+my-tool/
+├── tool.ts             # Main implementation
+├── info.json          # Tool metadata
+├── formatter.browser.tsx    # Browser formatting
+├── formatter.console.ts     # Console formatting
+└── tool.test.ts       # Tests
+```
+
+2. Define tool metadata (info.json):
+
+```json
+{
+  "name": "my_tool",
+  "description": "Description of my tool",
+  "version": "1.0.0",
+  "author": "BB Team",
+  "license": "MIT",
+  "examples": [
+    {
+      "description": "Example usage",
+      "input": {
+        "param1": "value1"
+      }
+    }
+  ]
+}
+```
+
+3. Implement the tool (tool.ts):
 
 ```typescript
-import { LLMTool } from "@beyondbetter/tools";
-import type { 
-  IConversationInteraction,
-  IProjectEditor,
-  LLMToolRunResult,
-  LLMAnswerToolUse 
+import LLMTool, {
+  type IConversationInteraction,
+  type IProjectEditor,
+  type LLMToolRunResult,
+  type LLMAnswerToolUse
 } from "@beyondbetter/tools";
 
 class MyTool extends LLMTool {
@@ -65,7 +96,7 @@ class MyTool extends LLMTool {
     toolUse: LLMAnswerToolUse,
     projectEditor: IProjectEditor
   ): Promise<LLMToolRunResult> {
-    const { param1 } = toolUse.parameters;
+    const { param1 } = toolUse.toolInput;
     
     return {
       toolResults: \`Processed: \${param1}\`,
@@ -76,19 +107,78 @@ class MyTool extends LLMTool {
 
   formatLogEntryToolUse(toolInput, format) {
     return format === "console"
-      ? \`Using my-tool with: \${JSON.stringify(toolInput)}\`
-      : <div>Using my-tool with: {JSON.stringify(toolInput)}</div>;
+      ? formatLogEntryToolUseConsole(toolInput)
+      : formatLogEntryToolUseBrowser(toolInput);
   }
 
   formatLogEntryToolResult(resultContent, format) {
     return format === "console"
-      ? \`Result: \${JSON.stringify(resultContent)}\`
-      : <div>Result: {JSON.stringify(resultContent)}</div>;
+      ? formatLogEntryToolResultConsole(resultContent)
+      : formatLogEntryToolResultBrowser(resultContent);
   }
 }
 ```
 
-2. Use the tool:
+4. Implement browser formatting (formatter.browser.tsx):
+
+```typescript
+/** @jsxImportSource preact */
+import LLMTool, {
+  type LLMToolInputSchema,
+  type LLMToolLogEntryFormattedResult
+} from "@beyondbetter/tools";
+
+export function formatLogEntryToolUse(
+  toolInput: LLMToolInputSchema
+): LLMToolLogEntryFormattedResult {
+  return {
+    title: LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'My Tool'),
+    subtitle: LLMTool.TOOL_TAGS_BROWSER.content.subtitle('Processing...'),
+    content: LLMTool.TOOL_TAGS_BROWSER.base.container(
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Parameters')}
+        {LLMTool.TOOL_TAGS_BROWSER.base.list([
+          <>
+            {LLMTool.TOOL_TAGS_BROWSER.base.label('Value:')}
+            {' '}
+            {LLMTool.TOOL_TAGS_BROWSER.content.text(toolInput.param1)}
+          </>
+        ])}
+      </>
+    ),
+    preview: 'Processing input...'
+  };
+}
+```
+
+5. Implement console formatting (formatter.console.ts):
+
+```typescript
+import { stripIndents } from 'common-tags';
+import LLMTool, {
+  type LLMToolInputSchema,
+  type LLMToolLogEntryFormattedResult
+} from "@beyondbetter/tools";
+
+export function formatLogEntryToolUse(
+  toolInput: LLMToolInputSchema
+): LLMToolLogEntryFormattedResult {
+  return {
+    title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'My Tool'),
+    subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle('Processing...'),
+    content: stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters')}
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
+        stripIndents`
+          ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Value:')} 
+          ${LLMTool.TOOL_STYLES_CONSOLE.content.text(toolInput.param1)}`
+      )}`,
+    preview: 'Processing input...'
+  };
+}
+```
+
+6. Use the tool:
 
 ```typescript
 const tool = new MyTool();
@@ -97,7 +187,7 @@ const result = await tool.runTool(
   {
     id: "tool-use-1",
     name: "my-tool",
-    parameters: {
+    toolInput: {
       param1: "test input",
     },
   },
@@ -121,8 +211,9 @@ Base class for all tools:
 
 - Input validation using JSON Schema
 - Standardized execution flow
-- Formatting for browser and console
+- Consistent formatting for browser and console
 - Resource management
+- Tool metadata support
 
 ### IProjectEditor
 

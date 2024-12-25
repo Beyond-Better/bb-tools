@@ -35,18 +35,43 @@ When creating a new tool:
 3. **Create Tool Structure**
    ```
    your-tool/
-   ├── mod.ts              # Main tool implementation
-   ├── formatter/
-   │   ├── browser.tsx    # Browser-specific formatting
-   │   └── console.ts     # Console-specific formatting
-   └── tests/
-       └── mod.test.ts    # Tool tests
+   ├── tool.ts             # Main tool implementation
+   ├── info.json          # Tool metadata and examples
+   ├── formatter.browser.tsx    # Browser-specific formatting
+   ├── formatter.console.ts     # Console-specific formatting
+   └── tool.test.ts       # Tool tests
    ```
 
-4. **Implement Core Components**
+4. **Create Tool Metadata**
+   ```json
+   {
+     "name": "your_tool",
+     "description": "Detailed description of your tool...",
+     "version": "1.0.0",
+     "author": "BB Team",
+     "license": "MIT",
+     "examples": [
+       {
+         "description": "Example usage description",
+         "input": {
+           "param1": "value1"
+         }
+       }
+     ]
+   }
+   ```
+
+5. **Implement Core Components**
 
    ```typescript
-   import { LLMTool } from "@beyondbetter/tools";
+   import LLMTool, {
+     type IConversationInteraction,
+     type IProjectEditor,
+     type LLMToolInputSchema,
+     type LLMToolLogEntryFormattedResult,
+     type LLMToolRunResult,
+     type LLMAnswerToolUse
+   } from "@beyondbetter/tools";
 
    class YourTool extends LLMTool {
      get inputSchema() {
@@ -81,40 +106,56 @@ When creating a new tool:
    }
    ```
 
-5. **Implement Formatters**
+6. **Implement Formatters**
 
-   Browser (formatter/browser.tsx):
+   Browser (formatter.browser.tsx):
    ```typescript
-   import { JSX } from "preact";
-   import type { LLMToolInputSchema } from "@beyondbetter/tools";
+   /** @jsxImportSource preact */
+   import LLMTool, {
+     type LLMToolInputSchema,
+     type LLMToolLogEntryFormattedResult
+   } from "@beyondbetter/tools";
 
    export function formatLogEntryToolUse(
      toolInput: LLMToolInputSchema,
-   ): JSX.Element {
-     // Return JSX for tool usage display
-   }
-
-   export function formatLogEntryToolResult(
-     resultContent: unknown,
-   ): JSX.Element {
-     // Return JSX for tool results display
+   ): LLMToolLogEntryFormattedResult {
+     return {
+       title: LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'Your Tool'),
+       subtitle: LLMTool.TOOL_TAGS_BROWSER.content.subtitle('Processing...'),
+       content: LLMTool.TOOL_TAGS_BROWSER.base.container(
+         <>
+           {LLMTool.TOOL_TAGS_BROWSER.base.label('Parameters')}
+           {LLMTool.TOOL_TAGS_BROWSER.base.list([
+             // Format parameters
+           ])}
+         </>
+       ),
+       preview: 'Tool execution preview'
+     };
    }
    ```
 
-   Console (formatter/console.ts):
+   Console (formatter.console.ts):
    ```typescript
-   import type { LLMToolInputSchema } from "@beyondbetter/tools";
+   import { stripIndents } from 'common-tags';
+   import LLMTool, {
+     type LLMToolInputSchema,
+     type LLMToolLogEntryFormattedResult
+   } from "@beyondbetter/tools";
 
    export function formatLogEntryToolUse(
      toolInput: LLMToolInputSchema,
-   ): string {
-     // Return formatted string for console
-   }
-
-   export function formatLogEntryToolResult(
-     resultContent: unknown,
-   ): string {
-     // Return formatted string for console
+   ): LLMToolLogEntryFormattedResult {
+     return {
+       title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'Your Tool'),
+       subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle('Processing...'),
+       content: stripIndents`
+         ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters')}
+         ${LLMTool.TOOL_STYLES_CONSOLE.base.list([
+           // Format parameters
+         ]).join('\n')}`,
+       preview: 'Tool execution preview'
+     };
    }
    ```
 
@@ -171,7 +212,7 @@ See [TESTING.md](./TESTING.md) for detailed testing guidelines. Key points:
    /**
     * Performs specific tool functionality
     * @param {string} input - Description of input
-    * @returns {Promise<Result>} Description of result
+    * @returns {Promise<r>} Description of result
     * @throws {Error} Description of error cases
     */
    ```
@@ -184,7 +225,7 @@ See [TESTING.md](./TESTING.md) for detailed testing guidelines. Key points:
 
 1. **Code Organization**
    - Keep related code together
-   - Use clear file structure
+   - Use clear file structure (tool.ts, info.json, formatters)
    - Follow naming conventions
    - Maintain consistent formatting
 
@@ -202,9 +243,17 @@ See [TESTING.md](./TESTING.md) for detailed testing guidelines. Key points:
 
 4. **Documentation**
    - Keep docs up to date
-   - Include examples
+   - Include examples in info.json
    - Document errors
    - Explain complex logic
+
+5. **Formatting**
+   - Use TOOL_TAGS_BROWSER for browser output
+   - Use TOOL_STYLES_CONSOLE for console output
+   - Use JSX fragments (<>...</>) for browser components
+   - Use stripIndents for console formatting
+   - Provide clear labels and structure
+   - Handle success and error states consistently
 
 ## See Also
 

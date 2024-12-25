@@ -14,10 +14,11 @@ across all tools.
 2. **Test File Structure**
    ```
    your-tool/
-   └── tests/
-       ├── mod.test.ts         # Core functionality tests
-       ├── browser.test.ts     # Browser formatter tests
-       └── console.test.ts     # Console formatter tests
+   ├── tool.ts             # Main tool implementation
+   ├── info.json          # Tool metadata and examples
+   ├── formatter.browser.tsx    # Browser-specific formatting
+   ├── formatter.console.ts     # Console-specific formatting
+   └── tool.test.ts       # Tool tests
    ```
 
 3. **Test Coverage Requirements**
@@ -26,6 +27,7 @@ across all tools.
    - Error scenarios
    - Input validation
    - Formatter output (browser and console)
+   - Styling constants usage
 
 ## Writing Tests
 
@@ -33,8 +35,12 @@ across all tools.
 
 ```typescript
 import { assertEquals, assertThrows } from "@std/assert";
-import { withTestProject } from "../test_utils.ts";
-import YourTool from "../mod.ts";
+import { withTestProject } from "@beyondbetter/tools/testing";
+import YourTool from "./tool.ts";
+import type { 
+  IConversationInteraction,
+  IProjectEditor 
+} from "@beyondbetter/tools";
 
 Deno.test({
   name: "YourTool - Basic functionality",
@@ -115,7 +121,18 @@ Deno.test({
          mockInput,
          "browser",
        );
-       // Assert JSX structure
+       
+       // Verify title formatting
+       assertEquals(
+         result.title,
+         LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'Your Tool')
+       );
+
+       // Verify content structure
+       const content = result.content as JSX.Element;
+       assertNotEquals(content.props.children.find(
+         child => child.type === LLMTool.TOOL_TAGS_BROWSER.base.label
+       ), undefined);
      },
    });
 
@@ -128,7 +145,18 @@ Deno.test({
          mockInput,
          "console",
        );
-       assertEquals(result, expectedConsoleOutput);
+
+       // Verify title formatting
+       assertEquals(
+         result.title,
+         LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'Your Tool')
+       );
+
+       // Verify content includes styled elements
+       assertStringIncludes(
+         result.content,
+         LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters')
+       );
      },
    });
    ```
@@ -197,6 +225,14 @@ export async function withTestProject(
    - Test with various input sizes
    - Include invalid data tests
 
+5. **Formatter Testing**
+   - Test TOOL_TAGS_BROWSER usage
+   - Test TOOL_STYLES_CONSOLE usage
+   - Verify proper JSX structure
+   - Check styled content formatting
+   - Test error state formatting
+   - Verify label and container usage
+
 ## Running Tests
 
 ```bash
@@ -204,7 +240,7 @@ export async function withTestProject(
 deno test
 
 # Run specific test file
-deno test your-tool/tests/mod.test.ts
+deno test your-tool/tool.test.ts
 
 # Run tests with coverage
 deno test --coverage
@@ -231,10 +267,12 @@ deno test --coverage
    - Resource management
 
 4. **Formatting**
-   - Browser output
-   - Console output
+   - Browser output styling
+   - Console output styling
    - Various content types
    - Error messages
+   - Label and container usage
+   - List formatting
 
 ## Continuous Integration
 
@@ -253,3 +291,4 @@ The package uses GitHub Actions for CI/CD:
 
 - [CREATING_TOOLS.md](./CREATING_TOOLS.md) - Tool creation guide
 - [README.md](../README.md) - Package overview
+- [tools.md](./tools.md) - Tool reference
