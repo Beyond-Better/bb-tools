@@ -1,0 +1,44 @@
+{
+  "name": "open_in_browser",
+  "description": "Open one or more URLs or local files in a web browser. Supports both system default and specific browsers. For local files, automatically converts paths to file:// URLs. Important notes:\n\n1. URL Support:\n   * Web URLs (http://, https://)\n   * Local file paths (converted to file:// URLs)\n   * Direct file:// URLs\n\n2. Browser Selection:\n   * Uses system default browser when unspecified\n   * Supports common browsers (chrome, firefox, edge, safari)\n   * Allows custom browser names\n\n3. Batch Operations:\n   * Open up to 6 URLs at once\n   * Mix of web URLs and local files\n   * Reports success/failure per URL\n\n4. Security:\n   * Local files must be within project root\n   * Validates URLs and file paths\n   * Reports detailed error messages",
+  "version": "1.0.0",
+  "author": "BB Team",
+  "license": "MIT",
+  "examples": [
+    {
+      "description": "Open a single URL in the default browser",
+      "input": {
+        "urls": ["https://example.com"]
+      }
+    },
+    {
+      "description": "Open multiple URLs in Firefox",
+      "input": {
+        "urls": [
+          "https://example.com",
+          "https://github.com"
+        ],
+        "browser": "firefox"
+      }
+    },
+    {
+      "description": "Open local HTML files",
+      "input": {
+        "urls": [
+          "docs/index.html",
+          "docs/api.html"
+        ]
+      }
+    },
+    {
+      "description": "Mix of URLs and local files in a custom browser",
+      "input": {
+        "urls": [
+          "https://example.com",
+          "docs/index.html"
+        ],
+        "browser": "brave"
+      }
+    }
+  ]
+}

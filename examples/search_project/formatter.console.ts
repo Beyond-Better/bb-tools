@@ -1,5 +1,5 @@
 import type { LLMToolInputSchema, LLMToolLogEntryFormattedResult } from '../../mod.ts';
-import type { SearchProjectInput } from './mod.ts';
+import type { SearchProjectInput } from './tool.ts';
 import LLMTool from '../../mod.ts';
 
 const { TOOL_STYLES_CONSOLE: styles } = LLMTool;

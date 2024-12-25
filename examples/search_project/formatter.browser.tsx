@@ -1,6 +1,6 @@
 /** @jsxImportSource preact */
 import type { LLMToolInputSchema, LLMToolLogEntryFormattedResult } from '../../mod.ts';
-import type { SearchProjectInput } from './mod.ts';
+import type { SearchProjectInput } from './tool.ts';
 import LLMTool from '../../mod.ts';
 
 const { TOOL_TAGS: tags } = LLMTool;
