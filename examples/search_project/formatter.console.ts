@@ -1,8 +1,9 @@
-import type { LLMToolInputSchema, LLMToolLogEntryFormattedResult } from '../../mod.ts';
+import { stripIndents } from 'common-tags';
+import LLMTool, {
+  type LLMToolInputSchema,
+  type LLMToolLogEntryFormattedResult
+} from '@beyondbetter/tools';
 import type { SearchProjectInput } from './tool.ts';
-import LLMTool from '../../mod.ts';
-
-const { TOOL_STYLES_CONSOLE: styles } = LLMTool;
 
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
@@ -20,52 +21,44 @@ export function formatLogEntryToolUse(
 
   const criteria = [];
   if (contentPattern) {
-    criteria.push(
-      `Content Pattern: ${styles.content.regex(contentPattern)}` +
-      (caseSensitive !== undefined
-        ? ` (case ${styles.content.boolean(caseSensitive, 'sensitive/insensitive')})`
-        : '')
-    );
+    criteria.push(stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Content pattern:')} 
+      ${LLMTool.TOOL_STYLES_CONSOLE.content.regex(contentPattern)}, 
+      ${LLMTool.TOOL_STYLES_CONSOLE.content.boolean(caseSensitive ?? false, 'case-sensitive/case-insensitive')}`);
   }
   if (filePattern) {
-    criteria.push(
-      `File Pattern: ${styles.content.filename(filePattern)}`
-    );
+    criteria.push(stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('File pattern:')} 
+      ${LLMTool.TOOL_STYLES_CONSOLE.content.filename(filePattern)}`);
   }
   if (dateAfter) {
-    criteria.push(
-      `Modified After: ${styles.content.date(dateAfter)}`
-    );
+    criteria.push(stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Modified after:')} 
+      ${LLMTool.TOOL_STYLES_CONSOLE.content.date(dateAfter)}`);
   }
   if (dateBefore) {
-    criteria.push(
-      `Modified Before: ${styles.content.date(dateBefore)}`
-    );
+    criteria.push(stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Modified before:')} 
+      ${LLMTool.TOOL_STYLES_CONSOLE.content.date(dateBefore)}`);
   }
   if (sizeMin !== undefined) {
-    criteria.push(
-      `Minimum Size: ${styles.content.size(sizeMin)}`
-    );
+    criteria.push(stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Minimum size:')} 
+      ${LLMTool.TOOL_STYLES_CONSOLE.content.size(sizeMin)}`);
   }
   if (sizeMax !== undefined) {
-    criteria.push(
-      `Maximum Size: ${styles.content.size(sizeMax)}`
-    );
+    criteria.push(stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Maximum size:')} 
+      ${LLMTool.TOOL_STYLES_CONSOLE.content.size(sizeMax)}`);
   }
 
-  const content = [
-    'Searching project with criteria:',
-    ...criteria.map(c => styles.base.listItem(c))
-  ].join('\n');
-
-  const preview = contentPattern
-    ? `Searching for ${contentPattern}`
-    : 'Searching project files';
-
   return {
-    title: styles.content.title('Tool Input', 'search_project'),
-    content,
-    preview,
+    title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'Search Project'),
+    subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle('Searching project files...'),
+    content: stripIndents`
+      ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Search Parameters')}
+      ${criteria.map(c => LLMTool.TOOL_STYLES_CONSOLE.base.listItem(c)).join('\n')}`,
+    preview: 'Searching project files with specified criteria',
   };
 }
 
@@ -74,23 +67,37 @@ export function formatLogEntryToolResult(
 ): LLMToolLogEntryFormattedResult {
   const content = resultContent as string;
   const lines = content.split('\n');
-  const fileCount = lines[1].split(' ')[0];
-  const criteria = lines[1].split(': ')[1];
+  const fileList = lines.slice(
+    lines.findIndex((line) => line.includes('<files>')) + 1,
+    lines.findIndex((line) => line.includes('</files>')),
+  );
 
-  const formattedContent = lines
-    .filter(line => !line.startsWith('<files>') && !line.startsWith('</files>'))
-    .map(line => {
-      if (line.startsWith('Error:')) {
-        return styles.status.error(line);
-      }
-      return line;
-    })
-    .join('\n');
+  const hasErrors = content.includes('Error:');
+  const errorLines = hasErrors 
+    ? lines.filter(line => line.startsWith('Error:'))
+    : [];
 
   return {
-    title: styles.content.title('Tool Output', 'search_project'),
-    subtitle: styles.content.subtitle(`Found ${fileCount} files`),
-    content: formattedContent,
-    preview: `Found ${fileCount} files matching ${criteria}`,
+    title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Result', 'Search Project'),
+    subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle(
+      hasErrors ? 'Search completed with errors' : 'Search completed successfully'
+    ),
+    content: stripIndents`
+      ${hasErrors ? stripIndents`
+        ${LLMTool.TOOL_STYLES_CONSOLE.content.status('error', 'Errors')}
+        ${errorLines.map(error => 
+          LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
+            LLMTool.TOOL_STYLES_CONSOLE.content.error(error)
+          )
+        ).join('\n')}` : stripIndents`
+        ${LLMTool.TOOL_STYLES_CONSOLE.content.status('completed', 'Files Found')}
+        ${fileList.map(file => 
+          LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
+            LLMTool.TOOL_STYLES_CONSOLE.content.filename(file)
+          )
+        ).join('\n')}`}`,
+    preview: hasErrors 
+      ? `Search completed with ${errorLines.length} error(s)`
+      : `Found ${fileList.length} files`,
   };
 }

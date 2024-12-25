@@ -1,9 +1,9 @@
 /** @jsxImportSource preact */
-import type { LLMToolInputSchema, LLMToolLogEntryFormattedResult } from '../../mod.ts';
+import LLMTool, {
+  type LLMToolInputSchema,
+  type LLMToolLogEntryFormattedResult
+} from '@beyondbetter/tools';
 import type { SearchProjectInput } from './tool.ts';
-import LLMTool from '../../mod.ts';
-
-const { TOOL_TAGS: tags } = LLMTool;
 
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
@@ -22,55 +22,64 @@ export function formatLogEntryToolUse(
   const criteria = [];
   if (contentPattern) {
     criteria.push(
-      <div>
-        Content Pattern: {tags.content.regex(contentPattern)}
-        {caseSensitive !== undefined && (
-          <span> (case {caseSensitive ? 'sensitive' : 'insensitive'})</span>
-        )}
-      </div>
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Content pattern:')}{' '}
+        {LLMTool.TOOL_TAGS_BROWSER.content.regex(contentPattern)}{' '}
+        {LLMTool.TOOL_TAGS_BROWSER.content.boolean(caseSensitive ?? false, 'case-sensitive/case-insensitive')}
+      </>,
     );
   }
   if (filePattern) {
     criteria.push(
-      <div>File Pattern: {tags.content.filename(filePattern)}</div>
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('File pattern:')}{' '}
+        {LLMTool.TOOL_TAGS_BROWSER.content.filename(filePattern)}
+      </>,
     );
   }
   if (dateAfter) {
     criteria.push(
-      <div>Modified After: {tags.content.date(dateAfter)}</div>
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Modified after:')}{' '}
+        {LLMTool.TOOL_TAGS_BROWSER.content.date(dateAfter)}
+      </>,
     );
   }
   if (dateBefore) {
     criteria.push(
-      <div>Modified Before: {tags.content.date(dateBefore)}</div>
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Modified before:')}{' '}
+        {LLMTool.TOOL_TAGS_BROWSER.content.date(dateBefore)}
+      </>,
     );
   }
   if (sizeMin !== undefined) {
     criteria.push(
-      <div>Minimum Size: {tags.content.size(sizeMin)}</div>
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Minimum size:')}{' '}
+        {LLMTool.TOOL_TAGS_BROWSER.content.size(sizeMin)}
+      </>,
     );
   }
   if (sizeMax !== undefined) {
     criteria.push(
-      <div>Maximum Size: {tags.content.size(sizeMax)}</div>
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Maximum size:')}{' '}
+        {LLMTool.TOOL_TAGS_BROWSER.content.size(sizeMax)}
+      </>,
     );
   }
 
-  const content = (
-    <div>
-      <div>Searching project with criteria:</div>
-      {criteria}
-    </div>
-  );
-
-  const preview = contentPattern
-    ? `Searching for ${contentPattern}`
-    : 'Searching project files';
-
   return {
-    title: tags.content.title('Tool Input', 'search_project'),
-    content,
-    preview,
+    title: LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'Search Project'),
+    subtitle: LLMTool.TOOL_TAGS_BROWSER.content.subtitle('Searching project files...'),
+    content: LLMTool.TOOL_TAGS_BROWSER.base.container(
+      <>
+        {LLMTool.TOOL_TAGS_BROWSER.base.label('Search Parameters')}
+        {LLMTool.TOOL_TAGS_BROWSER.base.list(criteria)}
+      </>,
+    ),
+    preview: 'Searching project files with specified criteria',
   };
 }
 
@@ -79,31 +88,44 @@ export function formatLogEntryToolResult(
 ): LLMToolLogEntryFormattedResult {
   const content = resultContent as string;
   const lines = content.split('\n');
-  const fileCount = lines[1].split(' ')[0];
-  const criteria = lines[1].split(': ')[1];
-
-  const formattedContent = (
-    <div>
-      {lines.map((line, index) => {
-        if (line.startsWith('<files>') || line.startsWith('</files>')) {
-          return null;
-        }
-        if (line.startsWith('Error:')) {
-          return (
-            <div key={index}>
-              {tags.content.error(line)}
-            </div>
-          );
-        }
-        return <div key={index}>{line}</div>;
-      })}
-    </div>
+  const fileList = lines.slice(
+    lines.findIndex((line) => line.includes('<files>')) + 1,
+    lines.findIndex((line) => line.includes('</files>')),
   );
 
+  const hasErrors = content.includes('Error:');
+  const errorLines = hasErrors 
+    ? lines.filter(line => line.startsWith('Error:'))
+    : [];
+
   return {
-    title: tags.content.title('Tool Output', 'search_project'),
-    subtitle: tags.content.subtitle(`Found ${fileCount} files`),
-    content: formattedContent,
-    preview: `Found ${fileCount} files matching ${criteria}`,
+    title: LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Result', 'Search Project'),
+    subtitle: LLMTool.TOOL_TAGS_BROWSER.content.subtitle(
+      hasErrors ? 'Search completed with errors' : 'Search completed successfully'
+    ),
+    content: LLMTool.TOOL_TAGS_BROWSER.base.container(
+      <>
+        {hasErrors ? (
+          <>
+            {LLMTool.TOOL_TAGS_BROWSER.content.status('error', 'Errors')}
+            {LLMTool.TOOL_TAGS_BROWSER.base.list(
+              errorLines.map(error => LLMTool.TOOL_TAGS_BROWSER.content.error(error))
+            )}
+          </>
+        ) : (
+          <>
+            {LLMTool.TOOL_TAGS_BROWSER.content.status('completed', 'Files Found')}
+            {fileList.length > 0 && (
+              LLMTool.TOOL_TAGS_BROWSER.base.list(
+                fileList.map(file => LLMTool.TOOL_TAGS_BROWSER.content.filename(file))
+              )
+            )}
+          </>
+        )}
+      </>
+    ),
+    preview: hasErrors 
+      ? `Search completed with ${errorLines.length} error(s)`
+      : `Found ${fileList.length} files`,
   };
 }
