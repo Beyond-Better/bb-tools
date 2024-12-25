@@ -1,8 +1,5 @@
-import type { FileMetadata, TokenUsage, ToolUsageStats } from "./types.ts";
-import type {
-  LLMMessageContentPart,
-  LLMMessageContentParts,
-} from "./message.ts";
+import type { FileMetadata, TokenUsage, ToolUsageStats } from './types.ts';
+import type { LLMMessageContentPart, LLMMessageContentParts } from './message.ts';
 
 /**
  * Core interface representing the conversation interaction capabilities needed by tools
@@ -45,7 +42,7 @@ export interface IConversationInteraction {
   /** Add a file to the conversation with metadata */
   addFileForMessage(
     filePath: string,
-    metadata: Omit<FileMetadata, "path">,
+    metadata: Omit<FileMetadata, 'path'>,
     messageId: string,
     toolUseId?: string,
   ): { filePath: string; fileMetadata: FileMetadata };
@@ -54,7 +51,7 @@ export interface IConversationInteraction {
   addFilesForMessage(
     filesToAdd: Array<{
       fileName: string;
-      metadata: Omit<FileMetadata, "path">;
+      metadata: Omit<FileMetadata, 'path'>;
     }>,
     messageId: string,
     toolUseId?: string,

@@ -1,8 +1,7 @@
 # Creating Tools for BB
 
-This guide provides comprehensive instructions for creating new tools in the BB
-ecosystem. It covers the entire process from planning to implementation and
-testing.
+This guide provides comprehensive instructions for creating new tools in the BB ecosystem. It covers
+the entire process from planning to implementation and testing.
 
 ## Overview
 
@@ -67,16 +66,16 @@ When creating a new tool:
    import LLMTool, {
      type IConversationInteraction,
      type IProjectEditor,
+     type LLMAnswerToolUse,
      type LLMToolInputSchema,
      type LLMToolLogEntryFormattedResult,
      type LLMToolRunResult,
-     type LLMAnswerToolUse
-   } from "@beyondbetter/tools";
+   } from '@beyondbetter/tools';
 
    class YourTool extends LLMTool {
      get inputSchema() {
        return {
-         type: "object",
+         type: 'object',
          properties: {
            // Define parameters
          },
@@ -93,13 +92,13 @@ When creating a new tool:
      }
 
      formatLogEntryToolUse(toolInput, format) {
-       return format === "console"
+       return format === 'console'
          ? formatLogEntryToolUseConsole(toolInput)
          : formatLogEntryToolUseBrowser(toolInput);
      }
 
      formatLogEntryToolResult(resultContent, format) {
-       return format === "console"
+       return format === 'console'
          ? formatLogEntryToolResultConsole(resultContent)
          : formatLogEntryToolResultBrowser(resultContent);
      }
@@ -113,8 +112,8 @@ When creating a new tool:
    /** @jsxImportSource preact */
    import LLMTool, {
      type LLMToolInputSchema,
-     type LLMToolLogEntryFormattedResult
-   } from "@beyondbetter/tools";
+     type LLMToolLogEntryFormattedResult,
+   } from '@beyondbetter/tools';
 
    export function formatLogEntryToolUse(
      toolInput: LLMToolInputSchema,
@@ -128,9 +127,9 @@ When creating a new tool:
            {LLMTool.TOOL_TAGS_BROWSER.base.list([
              // Format parameters
            ])}
-         </>
+         </>,
        ),
-       preview: 'Tool execution preview'
+       preview: 'Tool execution preview',
      };
    }
    ```
@@ -140,8 +139,8 @@ When creating a new tool:
    import { stripIndents } from 'common-tags';
    import LLMTool, {
      type LLMToolInputSchema,
-     type LLMToolLogEntryFormattedResult
-   } from "@beyondbetter/tools";
+     type LLMToolLogEntryFormattedResult,
+   } from '@beyondbetter/tools';
 
    export function formatLogEntryToolUse(
      toolInput: LLMToolInputSchema,
@@ -151,10 +150,12 @@ When creating a new tool:
        subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle('Processing...'),
        content: stripIndents`
          ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters')}
-         ${LLMTool.TOOL_STYLES_CONSOLE.base.list([
+         ${
+         LLMTool.TOOL_STYLES_CONSOLE.base.list([
            // Format parameters
-         ]).join('\n')}`,
-       preview: 'Tool execution preview'
+         ]).join('\n')
+       }`,
+       preview: 'Tool execution preview',
      };
    }
    ```

@@ -1,19 +1,11 @@
-import type { JSX } from "preact";
-import type { JSONSchema4 } from "json-schema";
-import { Ajv } from "ajv";
+import type { JSX } from 'preact';
+import type { JSONSchema4 } from 'json-schema';
+import { Ajv } from 'ajv';
 
-import {
-  TOOL_STYLES_BROWSER,
-  TOOL_STYLES_CONSOLE,
-  TOOL_TAGS,
-} from "./llm_tool_tags.tsx";
-import type { IConversationInteraction } from "./conversation.ts";
-import type { IProjectEditor } from "./project_editor.ts";
-import type {
-  LLMAnswerToolUse,
-  LLMMessageContentPart,
-  LLMMessageContentParts,
-} from "./message.ts";
+import { TOOL_STYLES_BROWSER, TOOL_STYLES_CONSOLE, TOOL_TAGS } from './llm_tool_tags.tsx';
+import type { IConversationInteraction } from './conversation.ts';
+import type { IProjectEditor } from './project_editor.ts';
+import type { LLMAnswerToolUse, LLMMessageContentPart, LLMMessageContentParts } from './message.ts';
 
 export type LLMToolInputSchema = JSONSchema4;
 export type LLMToolRunResultContent =
@@ -45,7 +37,7 @@ export interface LLMToolFeatures {
 
 export type LLMToolConfig = Record<string, unknown>;
 
-export type LLMToolFormatterDestination = "console" | "browser";
+export type LLMToolFormatterDestination = 'console' | 'browser';
 export type LLMToolUseInputFormatter = (
   toolInput: LLMToolInputSchema,
   format: LLMToolFormatterDestination,

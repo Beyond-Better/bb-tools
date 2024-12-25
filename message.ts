@@ -1,9 +1,9 @@
 /** Supported media types for image content */
 export type LLMMessageContentPartImageBlockSourceMediaType =
-  | "image/jpeg"
-  | "image/png"
-  | "image/gif"
-  | "image/webp";
+  | 'image/jpeg'
+  | 'image/png'
+  | 'image/gif'
+  | 'image/webp';
 
 /** Base interface for all message content parts */
 export interface LLMMessageContentPartBase {
@@ -11,36 +11,32 @@ export interface LLMMessageContentPartBase {
 }
 
 /** Text content block */
-export interface LLMMessageContentPartTextBlock
-  extends LLMMessageContentPartBase {
-  type: "text";
+export interface LLMMessageContentPartTextBlock extends LLMMessageContentPartBase {
+  type: 'text';
   text: string;
 }
 
 /** Image content block */
-export interface LLMMessageContentPartImageBlock
-  extends LLMMessageContentPartBase {
-  type: "image";
+export interface LLMMessageContentPartImageBlock extends LLMMessageContentPartBase {
+  type: 'image';
   source: {
-    type: "base64";
+    type: 'base64';
     media_type: LLMMessageContentPartImageBlockSourceMediaType;
     data: string;
   };
 }
 
 /** Tool use block */
-export interface LLMMessageContentPartToolUseBlock
-  extends LLMMessageContentPartBase {
-  type: "tool_use";
+export interface LLMMessageContentPartToolUseBlock extends LLMMessageContentPartBase {
+  type: 'tool_use';
   id: string;
   name: string;
   toolInput: Record<string, unknown>;
 }
 
 /** Tool result block */
-export interface LLMMessageContentPartToolResultBlock
-  extends LLMMessageContentPartBase {
-  type: "tool_result";
+export interface LLMMessageContentPartToolResultBlock extends LLMMessageContentPartBase {
+  type: 'tool_result';
   id: string;
   success: boolean;
   content: LLMMessageContentPart | LLMMessageContentParts;

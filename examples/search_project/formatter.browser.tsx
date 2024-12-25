@@ -1,7 +1,7 @@
 /** @jsxImportSource preact */
 import LLMTool, {
   type LLMToolInputSchema,
-  type LLMToolLogEntryFormattedResult
+  type LLMToolLogEntryFormattedResult,
 } from '@beyondbetter/tools';
 import type { SearchProjectInput } from './tool.ts';
 
@@ -25,7 +25,10 @@ export function formatLogEntryToolUse(
       <>
         {LLMTool.TOOL_TAGS_BROWSER.base.label('Content pattern:')}{' '}
         {LLMTool.TOOL_TAGS_BROWSER.content.regex(contentPattern)}{' '}
-        {LLMTool.TOOL_TAGS_BROWSER.content.boolean(caseSensitive ?? false, 'case-sensitive/case-insensitive')}
+        {LLMTool.TOOL_TAGS_BROWSER.content.boolean(
+          caseSensitive ?? false,
+          'case-sensitive/case-insensitive',
+        )}
       </>,
     );
   }
@@ -94,37 +97,37 @@ export function formatLogEntryToolResult(
   );
 
   const hasErrors = content.includes('Error:');
-  const errorLines = hasErrors 
-    ? lines.filter(line => line.startsWith('Error:'))
-    : [];
+  const errorLines = hasErrors ? lines.filter((line) => line.startsWith('Error:')) : [];
 
   return {
     title: LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Result', 'Search Project'),
     subtitle: LLMTool.TOOL_TAGS_BROWSER.content.subtitle(
-      hasErrors ? 'Search completed with errors' : 'Search completed successfully'
+      hasErrors ? 'Search completed with errors' : 'Search completed successfully',
     ),
     content: LLMTool.TOOL_TAGS_BROWSER.base.container(
       <>
-        {hasErrors ? (
-          <>
-            {LLMTool.TOOL_TAGS_BROWSER.content.status('error', 'Errors')}
-            {LLMTool.TOOL_TAGS_BROWSER.base.list(
-              errorLines.map(error => LLMTool.TOOL_TAGS_BROWSER.content.error(error))
-            )}
-          </>
-        ) : (
-          <>
-            {LLMTool.TOOL_TAGS_BROWSER.content.status('completed', 'Files Found')}
-            {fileList.length > 0 && (
-              LLMTool.TOOL_TAGS_BROWSER.base.list(
-                fileList.map(file => LLMTool.TOOL_TAGS_BROWSER.content.filename(file))
-              )
-            )}
-          </>
-        )}
-      </>
+        {hasErrors
+          ? (
+            <>
+              {LLMTool.TOOL_TAGS_BROWSER.content.status('error', 'Errors')}
+              {LLMTool.TOOL_TAGS_BROWSER.base.list(
+                errorLines.map((error) => LLMTool.TOOL_TAGS_BROWSER.content.error(error)),
+              )}
+            </>
+          )
+          : (
+            <>
+              {LLMTool.TOOL_TAGS_BROWSER.content.status('completed', 'Files Found')}
+              {fileList.length > 0 && (
+                LLMTool.TOOL_TAGS_BROWSER.base.list(
+                  fileList.map((file) => LLMTool.TOOL_TAGS_BROWSER.content.filename(file)),
+                )
+              )}
+            </>
+          )}
+      </>,
     ),
-    preview: hasErrors 
+    preview: hasErrors
       ? `Search completed with ${errorLines.length} error(s)`
       : `Found ${fileList.length} files`,
   };

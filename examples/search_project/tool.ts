@@ -1,10 +1,10 @@
 import LLMTool, {
   type IConversationInteraction,
   type IProjectEditor,
+  type LLMAnswerToolUse,
   type LLMToolInputSchema,
   type LLMToolLogEntryFormattedResult,
   type LLMToolRunResult,
-  type LLMAnswerToolUse
 } from '@beyondbetter/tools';
 
 import {
@@ -33,7 +33,8 @@ export default class SearchProjectTool extends LLMTool {
       properties: {
         contentPattern: {
           type: 'string',
-          description: String.raw`A grep-compatible regular expression to search file contents. Examples:
+          description: String
+            .raw`A grep-compatible regular expression to search file contents. Examples:
 * "function.*search" matches lines containing "function" followed by "search"
 * "\bclass\b" matches the word "class" with word boundaries
 * "import.*from" matches import statements
@@ -83,8 +84,8 @@ Leave empty to search only by file name, date, or size.`,
     toolInput: LLMToolInputSchema,
     format: 'console' | 'browser',
   ): LLMToolLogEntryFormattedResult {
-    return format === 'console' 
-      ? formatLogEntryToolUseConsole(toolInput) 
+    return format === 'console'
+      ? formatLogEntryToolUseConsole(toolInput)
       : formatLogEntryToolUseBrowser(toolInput);
   }
 
@@ -103,7 +104,15 @@ Leave empty to search only by file name, date, or size.`,
     projectEditor: IProjectEditor,
   ): Promise<LLMToolRunResult> {
     const input = toolUse.toolInput as SearchProjectInput;
-    const { contentPattern, caseSensitive = false, filePattern, dateAfter, dateBefore, sizeMin, sizeMax } = input;
+    const {
+      contentPattern,
+      caseSensitive = false,
+      filePattern,
+      dateAfter,
+      dateBefore,
+      sizeMin,
+      sizeMax,
+    } = input;
 
     try {
       let result;
@@ -119,7 +128,7 @@ Leave empty to search only by file name, date, or size.`,
             dateBefore,
             sizeMin,
             sizeMax,
-          }
+          },
         );
       } else {
         // Search metadata only
@@ -131,7 +140,7 @@ Leave empty to search only by file name, date, or size.`,
             dateBefore,
             sizeMin,
             sizeMax,
-          }
+          },
         );
       }
 
@@ -150,8 +159,10 @@ Leave empty to search only by file name, date, or size.`,
 ${files.length} files match the search criteria: ${searchCriteria}
 ${files.length > 0 ? `\n<files>\n${files.join('\n')}\n</files>` : ''}`;
 
-      const toolResponse = `Found ${files.length} files matching the search criteria: ${searchCriteria}`;
-      const bbResponse = `BB found ${files.length} files matching the search criteria: ${searchCriteria}`;
+      const toolResponse =
+        `Found ${files.length} files matching the search criteria: ${searchCriteria}`;
+      const bbResponse =
+        `BB found ${files.length} files matching the search criteria: ${searchCriteria}`;
 
       return { toolResults, toolResponse, bbResponse };
     } catch (error) {
@@ -171,7 +182,7 @@ ${files.length > 0 ? `\n<files>\n${files.join('\n')}\n</files>` : ''}`;
       dateBefore?: string;
       sizeMin?: number;
       sizeMax?: number;
-    }
+    },
   ): Promise<{ files: string[]; errorMessage?: string }> {
     // Implementation would go here
     // This is just a placeholder
@@ -186,7 +197,7 @@ ${files.length > 0 ? `\n<files>\n${files.join('\n')}\n</files>` : ''}`;
       dateBefore?: string;
       sizeMin?: number;
       sizeMax?: number;
-    }
+    },
   ): Promise<{ files: string[]; errorMessage?: string }> {
     // Implementation would go here
     // This is just a placeholder

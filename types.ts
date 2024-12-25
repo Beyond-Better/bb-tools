@@ -1,4 +1,4 @@
-import type { LLMMessageContentPartImageBlockSourceMediaType } from "./message.ts";
+import type { LLMMessageContentPartImageBlockSourceMediaType } from './message.ts';
 
 /** Token usage tracking */
 export interface TokenUsage {
@@ -11,7 +11,7 @@ export interface TokenUsage {
 
 /** File metadata information */
 export interface FileMetadata {
-  type: "text" | "image";
+  type: 'text' | 'image';
   mimeType?: LLMMessageContentPartImageBlockSourceMediaType;
   path: string;
   size: number;

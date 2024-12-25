@@ -1,14 +1,14 @@
 /** @jsxRuntime automatic */
 /** @jsxImportSource npm:preact@10.25.3 */
-import type { JSX } from "preact/jsx-runtime";
-import { colors } from "cliffy/ansi/colors";
+import type { JSX } from 'preact/jsx-runtime';
+import { colors } from 'cliffy/ansi/colors';
 
 // Helper functions for formatting
 const formatNumber = (
   num: number,
   opts: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
 ): string => {
-  return new Intl.NumberFormat("en-US", opts).format(num);
+  return new Intl.NumberFormat('en-US', opts).format(num);
 };
 
 const formatDuration = (ms: number): string => {
@@ -30,118 +30,112 @@ const formatTimeAgo = (date: Date): string => {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (days > 0) return `${days} day${days === 1 ? "" : "s"} ago`;
-  if (hours > 0) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
-  if (minutes > 0) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
-  return "just now";
+  if (days > 0) return `${days} day${days === 1 ? '' : 's'} ago`;
+  if (hours > 0) return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  if (minutes > 0) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+  return 'just now';
 };
 
 // Helper function for converting boolean values to strings
 const formatBoolean = (
   value: boolean,
-  format: "yes/no" | "enabled/disabled" | "included/excluded" | string =
-    "yes/no",
+  format: 'yes/no' | 'enabled/disabled' | 'included/excluded' | string = 'yes/no',
 ): string => {
-  return format === "yes/no"
-    ? (value ? "Yes" : "No")
-    : format === "enabled/disabled"
-    ? (value ? "Enabled" : "Disabled")
-    : format === "included/excluded"
-    ? (value ? "Included" : "Excluded")
-    : (value ? format.split("/")[0] : format.split("/")[1]).toUpperCase();
+  return format === 'yes/no'
+    ? (value ? 'Yes' : 'No')
+    : format === 'enabled/disabled'
+    ? (value ? 'Enabled' : 'Disabled')
+    : format === 'included/excluded'
+    ? (value ? 'Included' : 'Excluded')
+    : (value ? format.split('/')[0] : format.split('/')[1]).toUpperCase();
 };
 
 export const TOOL_STYLES_BROWSER = {
   base: {
-    container: "rounded-lg prose dark:prose-invert max-w-none py-1 px-4",
-    box: "rounded-lg max-w-none py-1 px-4 whitespace-pre-wrap",
+    container: 'rounded-lg prose dark:prose-invert max-w-none py-1 px-4',
+    box: 'rounded-lg max-w-none py-1 px-4 whitespace-pre-wrap',
     pre:
-      "p-2.5 rounded font-mono text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/50",
-    code:
-      "font-mono text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/50",
-    list: "space-y-2",
-    listItem: "ml-4",
-    label: "font-semibold text-gray-700 dark:text-gray-300",
+      'p-2.5 rounded font-mono text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/50',
+    code: 'font-mono text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/50',
+    list: 'space-y-2',
+    listItem: 'ml-4',
+    label: 'font-semibold text-gray-700 dark:text-gray-300',
   },
   status: {
     error:
-      "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400",
+      'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400',
     success:
-      "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400",
+      'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400',
     warning:
-      "bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400",
+      'bg-yellow-50 dark:bg-yellow-900/30 border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-400',
     info:
-      "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400",
+      'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400',
   },
   content: {
-    error:
-      "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-800 px-2 py-1 rounded",
-    code: "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700",
-    data: "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700",
-    filename: "font-mono text-cyan-600 dark:text-cyan-400",
-    timestamp: "font-mono text-gray-600 dark:text-gray-400",
-    duration: "font-mono text-purple-600 dark:text-purple-400",
-    timeRange: "font-mono text-purple-600 dark:text-purple-400",
-    timeAgo: "font-mono text-purple-600 dark:text-purple-400",
-    percentage: "font-mono text-emerald-600 dark:text-emerald-400",
-    number: "font-mono text-blue-600 dark:text-blue-400",
-    bytes: "font-mono text-blue-600 dark:text-blue-400",
-    speed: "font-mono text-blue-600 dark:text-blue-400",
+    error: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-800 px-2 py-1 rounded',
+    code: 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
+    data: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700',
+    filename: 'font-mono text-cyan-600 dark:text-cyan-400',
+    timestamp: 'font-mono text-gray-600 dark:text-gray-400',
+    duration: 'font-mono text-purple-600 dark:text-purple-400',
+    timeRange: 'font-mono text-purple-600 dark:text-purple-400',
+    timeAgo: 'font-mono text-purple-600 dark:text-purple-400',
+    percentage: 'font-mono text-emerald-600 dark:text-emerald-400',
+    number: 'font-mono text-blue-600 dark:text-blue-400',
+    bytes: 'font-mono text-blue-600 dark:text-blue-400',
+    speed: 'font-mono text-blue-600 dark:text-blue-400',
     status: {
       running:
-        "bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-sm',
       completed:
-        "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-full text-sm',
       failed:
-        "bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 px-2 py-0.5 rounded-full text-sm',
       pending:
-        "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-0.5 rounded-full text-sm',
       success:
-        "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-full text-sm',
       error:
-        "bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 px-2 py-0.5 rounded-full text-sm',
       warning:
-        "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-0.5 rounded-full text-sm',
     },
-    progress: "font-mono text-blue-600 dark:text-blue-400",
+    progress: 'font-mono text-blue-600 dark:text-blue-400',
     priority: {
-      high: "text-red-600 dark:text-red-400 font-semibold",
-      medium: "text-yellow-600 dark:text-yellow-400 font-semibold",
-      low: "text-green-600 dark:text-green-400 font-semibold",
+      high: 'text-red-600 dark:text-red-400 font-semibold',
+      medium: 'text-yellow-600 dark:text-yellow-400 font-semibold',
+      low: 'text-green-600 dark:text-green-400 font-semibold',
     },
-    version: "font-mono text-gray-600 dark:text-gray-400",
+    version: 'font-mono text-gray-600 dark:text-gray-400',
     badge: {
       default:
-        "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-2 py-0.5 rounded-full text-sm",
+        'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-2 py-0.5 rounded-full text-sm',
       primary:
-        "bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-sm',
       success:
-        "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 px-2 py-0.5 rounded-full text-sm',
       warning:
-        "bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 px-2 py-0.5 rounded-full text-sm',
       error:
-        "bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 px-2 py-0.5 rounded-full text-sm",
+        'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 px-2 py-0.5 rounded-full text-sm',
     },
-    icon: "inline-block align-middle",
-    link:
-      "text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline",
+    icon: 'inline-block align-middle',
+    link: 'text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline',
     diff: {
-      add:
-        "bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 font-mono",
-      remove:
-        "bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 font-mono",
+      add: 'bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 font-mono',
+      remove: 'bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300 font-mono',
     },
-    truncated: "truncate",
-    url: "font-mono text-blue-600 dark:text-blue-400 break-all",
-    counts: "font-mono text-purple-600 dark:text-purple-400",
-    tokenUsage: "font-mono text-purple-600 dark:text-purple-400",
-    toolName: "font-mono text-blue-600 dark:text-blue-400",
-    date: "font-mono text-gray-600 dark:text-gray-400",
-    directory: "font-mono text-cyan-700 dark:text-cyan-400",
-    boolean: "font-mono text-indigo-600 dark:text-indigo-400",
+    truncated: 'truncate',
+    url: 'font-mono text-blue-600 dark:text-blue-400 break-all',
+    counts: 'font-mono text-purple-600 dark:text-purple-400',
+    tokenUsage: 'font-mono text-purple-600 dark:text-purple-400',
+    toolName: 'font-mono text-blue-600 dark:text-blue-400',
+    date: 'font-mono text-gray-600 dark:text-gray-400',
+    directory: 'font-mono text-cyan-700 dark:text-cyan-400',
+    boolean: 'font-mono text-indigo-600 dark:text-indigo-400',
     regex:
-      "font-mono text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 px-1 rounded",
-    size: "font-mono text-gray-600 dark:text-gray-400",
+      'font-mono text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/30 px-1 rounded',
+    size: 'font-mono text-gray-600 dark:text-gray-400',
   },
 };
 
@@ -161,19 +155,14 @@ export const TOOL_STYLES_CONSOLE = {
     info: (text: string): string => colors.blue(text),
   },
   content: {
-    timestamp: (date: Date | string): string =>
-      colors.gray(new Date(date).toISOString()),
+    timestamp: (date: Date | string): string => colors.gray(new Date(date).toISOString()),
     duration: (ms: number): string => colors.magenta(formatDuration(ms)),
     timeRange: (start: Date | string, end: Date | string): string =>
       colors.magenta(
-        `${new Date(start).toLocaleTimeString()} - ${
-          new Date(end).toLocaleTimeString()
-        }`,
+        `${new Date(start).toLocaleTimeString()} - ${new Date(end).toLocaleTimeString()}`,
       ),
-    timeAgo: (date: Date | string): string =>
-      colors.gray(formatTimeAgo(new Date(date))),
-    date: (value: Date | string): string =>
-      colors.gray(new Date(value).toLocaleString()),
+    timeAgo: (date: Date | string): string => colors.gray(formatTimeAgo(new Date(date))),
+    date: (value: Date | string): string => colors.gray(new Date(value).toLocaleString()),
     percentage: (value: number, decimals = 1): string =>
       colors.green(
         `${
@@ -185,11 +174,10 @@ export const TOOL_STYLES_CONSOLE = {
       ),
     number: (
       value: number,
-      opts: { minimumFractionDigits?: number; maximumFractionDigits?: number } =
-        {},
+      opts: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
     ): string => colors.blue(formatNumber(value, opts)),
     bytes: (value: number, decimals = 1): string => {
-      const units = ["B", "KB", "MB", "GB"];
+      const units = ['B', 'KB', 'MB', 'GB'];
       let size = value;
       let unit = 0;
       while (size >= 1024 && unit < units.length - 1) {
@@ -257,12 +245,11 @@ export const TOOL_STYLES_CONSOLE = {
     directory: (path: string): string => colors.cyan(path),
     boolean: (
       value: boolean,
-      format: "yes/no" | "enabled/disabled" | "included/excluded" | string =
-        "yes/no",
+      format: 'yes/no' | 'enabled/disabled' | 'included/excluded' | string = 'yes/no',
     ): string => colors.magenta(formatBoolean(value, format)),
     regex: (pattern: string): string => colors.yellow(pattern),
     size: (bytes: number): string => {
-      const units = ["B", "KB", "MB", "GB"];
+      const units = ['B', 'KB', 'MB', 'GB'];
       let size = bytes;
       let unit = 0;
       while (size >= 1024 && unit < units.length - 1) {
@@ -289,20 +276,20 @@ export const createToolTitle = (
   toolRole: string,
   toolName: string,
 ): JSX.Element => {
-  const title = toolRole === "Tool Use"
-    ? "Tool Input"
-    : toolRole === "Tool Result"
-    ? "Tool Output"
-    : "Tool";
+  const title = toolRole === 'Tool Use'
+    ? 'Tool Input'
+    : toolRole === 'Tool Result'
+    ? 'Tool Output'
+    : 'Tool';
   return (
-    <div className="bb-log-entry-title">
-      {title} <span className="bb-log-entry-toolname">({toolName})</span>
+    <div className='bb-log-entry-title'>
+      {title} <span className='bb-log-entry-toolname'>({toolName})</span>
     </div>
   );
 };
 
 export const createToolSubtitle = (text: string | JSX.Element): JSX.Element => (
-  <span className="bb-log-entry-subtitle">{text}</span>
+  <span className='bb-log-entry-subtitle'>{text}</span>
 );
 
 // Content tag functions
@@ -373,7 +360,7 @@ export const createToolDate = (text: string): JSX.Element => (
 );
 
 export const createToolImage = (src: string, alt: string): JSX.Element => (
-  <img src={src} alt={alt} className="max-w-full h-auto rounded" />
+  <img src={src} alt={alt} className='max-w-full h-auto rounded' />
 );
 
 export const createToolDirectory = (text: string): JSX.Element => (
@@ -382,8 +369,7 @@ export const createToolDirectory = (text: string): JSX.Element => (
 
 export const createToolBoolean = (
   value: boolean,
-  format: "yes/no" | "enabled/disabled" | "included/excluded" | string =
-    "yes/no",
+  format: 'yes/no' | 'enabled/disabled' | 'included/excluded' | string = 'yes/no',
 ): JSX.Element => {
   const text = formatBoolean(value, format);
   return <span className={TOOL_STYLES_BROWSER.content.boolean}>{text}</span>;
@@ -394,7 +380,7 @@ export const createToolRegex = (text: string): JSX.Element => (
 );
 
 export const createToolSize = (bytes: number): JSX.Element => {
-  const units = ["B", "KB", "MB", "GB"];
+  const units = ['B', 'KB', 'MB', 'GB'];
   let size = bytes;
   let unit = 0;
   while (size >= 1024 && unit < units.length - 1) {
@@ -476,7 +462,7 @@ export const createToolSpeed = (
 
 // Create new tag functions for status/states
 export const createToolStatus = (
-  status: "running" | "completed" | "failed" | "pending",
+  status: 'running' | 'completed' | 'failed' | 'pending',
   text?: string,
 ): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.status[status]}>
@@ -494,7 +480,7 @@ export const createToolProgress = (
 );
 
 export const createToolPriority = (
-  level: "high" | "medium" | "low",
+  level: 'high' | 'medium' | 'low',
   text?: string,
 ): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.priority[level]}>
@@ -516,7 +502,7 @@ export const createToolError = (text: string): JSX.Element => (
 // Create new tag functions for UI/display
 export const createToolBadge = (
   text: string,
-  type: "default" | "primary" | "success" | "warning" | "error" = "default",
+  type: 'default' | 'primary' | 'success' | 'warning' | 'error' = 'default',
 ): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.badge[type]}>
     {text}
@@ -533,8 +519,8 @@ export const createToolLink = (text: string, href: string): JSX.Element => (
   <a
     href={href}
     className={TOOL_STYLES_BROWSER.content.link}
-    target="_blank"
-    rel="noopener noreferrer"
+    target='_blank'
+    rel='noopener noreferrer'
   >
     {text}
   </a>
@@ -542,10 +528,10 @@ export const createToolLink = (text: string, href: string): JSX.Element => (
 
 export const createToolDiff = (
   text: string,
-  type: "add" | "remove",
+  type: 'add' | 'remove',
 ): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.diff[type]}>
-    {type === "add" ? "+" : "-"}
+    {type === 'add' ? '+' : '-'}
     {text}
   </span>
 );

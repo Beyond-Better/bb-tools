@@ -1,10 +1,12 @@
 # Search Project Tool Example
 
-This example demonstrates how to create a tool using the BB Tools framework. It implements a file search tool that can search project files by content, name, date, and size.
+This example demonstrates how to create a tool using the BB Tools framework. It implements a file
+search tool that can search project files by content, name, date, and size.
 
 ## Overview
 
 The search project tool shows how to:
+
 - Implement the LLMTool base class
 - Use IProjectEditor and IConversationInteraction interfaces
 - Create browser and console formatters
@@ -13,6 +15,7 @@ The search project tool shows how to:
 ## Implementation
 
 ### Tool Structure
+
 ```
 search_project/
 ├── mod.ts              # Main tool implementation
@@ -45,14 +48,14 @@ search_project/
 ## Usage
 
 ```typescript
-import { SearchProjectTool } from "@beyondbetter/tools/examples/search_project";
+import { SearchProjectTool } from '@beyondbetter/tools/examples/search_project';
 
 // Create tool instance
 const tool = new SearchProjectTool(
   'search_project',
   'Search project files',
   {},
-  { async: true }
+  { async: true },
 );
 
 // Use the tool
@@ -64,10 +67,10 @@ const result = await tool.runTool(
     toolInput: {
       filePattern: '*.ts',
       contentPattern: 'function',
-      caseSensitive: true
-    }
+      caseSensitive: true,
+    },
   },
-  projectEditor
+  projectEditor,
 );
 ```
 
@@ -76,6 +79,7 @@ const result = await tool.runTool(
 ### Input Validation
 
 The tool validates input using JSON Schema:
+
 ```typescript
 get inputSchema(): LLMToolInputSchema {
   return {
@@ -94,6 +98,7 @@ get inputSchema(): LLMToolInputSchema {
 ### Formatting
 
 Browser formatting with JSX:
+
 ```typescript
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
@@ -102,12 +107,13 @@ export function formatLogEntryToolUse(
   return {
     title: tags.content.title('Tool Input', 'search_project'),
     content: <div>...</div>,
-    preview: 'Preview text'
+    preview: 'Preview text',
   };
 }
 ```
 
 Console formatting with ANSI:
+
 ```typescript
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
@@ -116,7 +122,7 @@ export function formatLogEntryToolUse(
   return {
     title: styles.content.title('Tool Input', 'search_project'),
     content: '...',
-    preview: 'Preview text'
+    preview: 'Preview text',
   };
 }
 ```
@@ -124,23 +130,24 @@ export function formatLogEntryToolUse(
 ### Testing
 
 The example includes tests for:
+
 ```typescript
 // Basic functionality
-Deno.test("SearchProjectTool - Basic functionality", async () => {
+Deno.test('SearchProjectTool - Basic functionality', async () => {
   // Test tool execution
 });
 
 // Input validation
-Deno.test("SearchProjectTool - Input validation", () => {
+Deno.test('SearchProjectTool - Input validation', () => {
   // Test schema validation
 });
 
 // Formatting
-Deno.test("SearchProjectTool - Browser formatter", () => {
+Deno.test('SearchProjectTool - Browser formatter', () => {
   // Test browser output
 });
 
-Deno.test("SearchProjectTool - Console formatter", () => {
+Deno.test('SearchProjectTool - Console formatter', () => {
   // Test console output
 });
 ```

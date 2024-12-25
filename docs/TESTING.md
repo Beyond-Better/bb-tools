@@ -1,8 +1,7 @@
 # Testing Guidelines for BB Tools
 
-This document outlines testing requirements and best practices for the BB tools
-package. Following these guidelines ensures consistent quality and reliability
-across all tools.
+This document outlines testing requirements and best practices for the BB tools package. Following
+these guidelines ensures consistent quality and reliability across all tools.
 
 ## Core Principles
 
@@ -34,16 +33,13 @@ across all tools.
 ### Basic Structure
 
 ```typescript
-import { assertEquals, assertThrows } from "@std/assert";
-import { withTestProject } from "@beyondbetter/tools/testing";
-import YourTool from "./tool.ts";
-import type { 
-  IConversationInteraction,
-  IProjectEditor 
-} from "@beyondbetter/tools";
+import { assertEquals, assertThrows } from '@std/assert';
+import { withTestProject } from '@beyondbetter/tools/testing';
+import YourTool from './tool.ts';
+import type { IConversationInteraction, IProjectEditor } from '@beyondbetter/tools';
 
 Deno.test({
-  name: "YourTool - Basic functionality",
+  name: 'YourTool - Basic functionality',
   async fn() {
     await withTestProject(async (projectEditor) => {
       const tool = new YourTool();
@@ -58,7 +54,7 @@ Deno.test({
 1. **Core Functionality**
    ```typescript
    Deno.test({
-     name: "YourTool - Successfully processes input",
+     name: 'YourTool - Successfully processes input',
      async fn() {
        await withTestProject(async (projectEditor) => {
          const tool = new YourTool();
@@ -76,11 +72,11 @@ Deno.test({
 2. **Input Validation**
    ```typescript
    Deno.test({
-     name: "YourTool - Validates input correctly",
+     name: 'YourTool - Validates input correctly',
      fn() {
        const tool = new YourTool();
        const valid = tool.validateInput({
-         validParam: "value",
+         validParam: 'value',
        });
        assertEquals(valid, true);
      },
@@ -90,7 +86,7 @@ Deno.test({
 3. **Error Handling**
    ```typescript
    Deno.test({
-     name: "YourTool - Handles errors appropriately",
+     name: 'YourTool - Handles errors appropriately',
      async fn() {
        await withTestProject(async (projectEditor) => {
          const tool = new YourTool();
@@ -103,7 +99,7 @@ Deno.test({
              );
            },
            Error,
-           "Expected error message",
+           'Expected error message',
          );
        });
      },
@@ -114,48 +110,51 @@ Deno.test({
    ```typescript
    // Browser formatter
    Deno.test({
-     name: "YourTool - Formats browser output correctly",
+     name: 'YourTool - Formats browser output correctly',
      fn() {
        const tool = new YourTool();
        const result = tool.formatLogEntryToolUse(
          mockInput,
-         "browser",
+         'browser',
        );
-       
+
        // Verify title formatting
        assertEquals(
          result.title,
-         LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'Your Tool')
+         LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'Your Tool'),
        );
 
        // Verify content structure
        const content = result.content as JSX.Element;
-       assertNotEquals(content.props.children.find(
-         child => child.type === LLMTool.TOOL_TAGS_BROWSER.base.label
-       ), undefined);
+       assertNotEquals(
+         content.props.children.find(
+           (child) => child.type === LLMTool.TOOL_TAGS_BROWSER.base.label,
+         ),
+         undefined,
+       );
      },
    });
 
    // Console formatter
    Deno.test({
-     name: "YourTool - Formats console output correctly",
+     name: 'YourTool - Formats console output correctly',
      fn() {
        const tool = new YourTool();
        const result = tool.formatLogEntryToolUse(
          mockInput,
-         "console",
+         'console',
        );
 
        // Verify title formatting
        assertEquals(
          result.title,
-         LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'Your Tool')
+         LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'Your Tool'),
        );
 
        // Verify content includes styled elements
        assertStringIncludes(
          result.content,
-         LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters')
+         LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters'),
        );
      },
    });
@@ -175,8 +174,8 @@ const mockInteraction: IConversationInteraction = {
 
 // Mock tool use
 const mockToolUse: LLMAnswerToolUse = {
-  id: "test-id",
-  name: "your-tool",
+  id: 'test-id',
+  name: 'your-tool',
   toolInput: {
     // Tool-specific parameters
   },

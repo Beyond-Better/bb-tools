@@ -1,5 +1,5 @@
-import type { IConversationInteraction } from "./conversation.ts";
-import type { FileMetadata } from "./types.ts";
+import type { IConversationInteraction } from './conversation.ts';
+import type { FileMetadata } from './types.ts';
 
 /**
  * Core interface representing the project editing capabilities needed by tools
@@ -39,7 +39,7 @@ export interface IProjectEditor {
   ): Promise<
     Array<{
       fileName: string;
-      metadata: Omit<FileMetadata, "path">;
+      metadata: Omit<FileMetadata, 'path'>;
     }>
   >;
 }

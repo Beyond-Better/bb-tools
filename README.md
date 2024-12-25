@@ -1,8 +1,8 @@
 # @beyondbetter/tools
 
-Core tool infrastructure for building BB (Beyond Better) AI assistant tools.
-This package provides the base classes, interfaces, and types needed to create
-tools that can be used with the BB AI assistant.
+Core tool infrastructure for building BB (Beyond Better) AI assistant tools. This package provides
+the base classes, interfaces, and types needed to create tools that can be used with the BB AI
+assistant.
 
 ## Features
 
@@ -125,11 +125,11 @@ class MyTool extends LLMTool {
 /** @jsxImportSource preact */
 import LLMTool, {
   type LLMToolInputSchema,
-  type LLMToolLogEntryFormattedResult
-} from "@beyondbetter/tools";
+  type LLMToolLogEntryFormattedResult,
+} from '@beyondbetter/tools';
 
 export function formatLogEntryToolUse(
-  toolInput: LLMToolInputSchema
+  toolInput: LLMToolInputSchema,
 ): LLMToolLogEntryFormattedResult {
   return {
     title: LLMTool.TOOL_TAGS_BROWSER.content.title('Tool Use', 'My Tool'),
@@ -139,14 +139,13 @@ export function formatLogEntryToolUse(
         {LLMTool.TOOL_TAGS_BROWSER.base.label('Parameters')}
         {LLMTool.TOOL_TAGS_BROWSER.base.list([
           <>
-            {LLMTool.TOOL_TAGS_BROWSER.base.label('Value:')}
-            {' '}
+            {LLMTool.TOOL_TAGS_BROWSER.base.label('Value:')}{' '}
             {LLMTool.TOOL_TAGS_BROWSER.content.text(toolInput.param1)}
-          </>
+          </>,
         ])}
-      </>
+      </>,
     ),
-    preview: 'Processing input...'
+    preview: 'Processing input...',
   };
 }
 ```
@@ -157,23 +156,25 @@ export function formatLogEntryToolUse(
 import { stripIndents } from 'common-tags';
 import LLMTool, {
   type LLMToolInputSchema,
-  type LLMToolLogEntryFormattedResult
-} from "@beyondbetter/tools";
+  type LLMToolLogEntryFormattedResult,
+} from '@beyondbetter/tools';
 
 export function formatLogEntryToolUse(
-  toolInput: LLMToolInputSchema
+  toolInput: LLMToolInputSchema,
 ): LLMToolLogEntryFormattedResult {
   return {
     title: LLMTool.TOOL_STYLES_CONSOLE.content.title('Tool Use', 'My Tool'),
     subtitle: LLMTool.TOOL_STYLES_CONSOLE.content.subtitle('Processing...'),
     content: stripIndents`
       ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Parameters')}
-      ${LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
+      ${
+      LLMTool.TOOL_STYLES_CONSOLE.base.listItem(
         stripIndents`
           ${LLMTool.TOOL_STYLES_CONSOLE.base.label('Value:')} 
-          ${LLMTool.TOOL_STYLES_CONSOLE.content.text(toolInput.param1)}`
-      )}`,
-    preview: 'Processing input...'
+          ${LLMTool.TOOL_STYLES_CONSOLE.content.text(toolInput.param1)}`,
+      )
+    }`,
+    preview: 'Processing input...',
   };
 }
 ```
@@ -185,10 +186,10 @@ const tool = new MyTool();
 const result = await tool.runTool(
   conversationInteraction,
   {
-    id: "tool-use-1",
-    name: "my-tool",
+    id: 'tool-use-1',
+    name: 'my-tool',
     toolInput: {
-      param1: "test input",
+      param1: 'test input',
     },
   },
   projectEditor,
@@ -197,11 +198,9 @@ const result = await tool.runTool(
 
 ## Documentation
 
-- [Creating Tools](./docs/CREATING_TOOLS.md) - Detailed guide for creating new
-  tools
+- [Creating Tools](./docs/CREATING_TOOLS.md) - Detailed guide for creating new tools
 - [Testing Guide](./docs/TESTING.md) - Testing requirements and guidelines
-- [Tools Reference](./docs/tools.md) - Comprehensive tool framework
-  documentation
+- [Tools Reference](./docs/tools.md) - Comprehensive tool framework documentation
 
 ## Core Interfaces
 
@@ -259,10 +258,8 @@ MIT License - see LICENSE file for details.
 
 ## Related Projects
 
-- [BB (Beyond Better)](https://github.com/beyondbetter/bb) - AI assistant using
-  this tool framework
-- [@beyondbetter/types](https://jsr.io/@beyondbetter/types) - Shared types for
-  BB projects
+- [BB (Beyond Better)](https://github.com/beyondbetter/bb) - AI assistant using this tool framework
+- [@beyondbetter/types](https://jsr.io/@beyondbetter/types) - Shared types for BB projects
 
 ## Support
 

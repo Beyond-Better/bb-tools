@@ -1,12 +1,12 @@
 # BB Tools Reference
 
-This document provides a comprehensive reference for the BB tools framework,
-including tool types, interfaces, implementation patterns, and styling guidelines.
+This document provides a comprehensive reference for the BB tools framework, including tool types,
+interfaces, implementation patterns, and styling guidelines.
 
 ## Tool Framework Overview
 
-The BB tools framework provides a structured way to create tools that can be
-used by AI assistants. Each tool:
+The BB tools framework provides a structured way to create tools that can be used by AI assistants.
+Each tool:
 
 - Extends the `LLMTool` base class
 - Implements specific interfaces
@@ -90,7 +90,7 @@ class FileSystemTool extends LLMTool {
   ): Promise<LLMToolRunResult> {
     const { filePath } = toolUse.toolInput;
     if (!isPathWithinProject(projectEditor.projectRoot, filePath)) {
-      throw new Error("Invalid path");
+      throw new Error('Invalid path');
     }
     // Perform file operations
   }
@@ -119,7 +119,7 @@ class DataProcessingTool extends LLMTool {
     // Process data
     return {
       toolResults: processedData,
-      toolResponse: "Data processed successfully",
+      toolResponse: 'Data processed successfully',
       bbResponse: { data: processedData },
     };
   }
