@@ -1,8 +1,8 @@
 import { assertEquals, assertRejects, assertStringIncludes } from "https://deno.land/std@0.217.0/assert/mod.ts";
 import { assertSpyCalls, spy } from "https://deno.land/std@0.217.0/testing/mock.ts";
-import { withTestProject } from "@beyondbetter/tools/testing";
+import { withTestProject } from "jsr:@beyondbetter/tools/testing";
 import OpenInBrowserTool from "./tool.ts";
-import type { IConversationInteraction, LLMAnswerToolUse } from "@beyondbetter/tools";
+import type { IConversationInteraction, LLMAnswerToolUse } from "jsr:@beyondbetter/tools";
 
 // Mock interaction
 const mockInteraction: IConversationInteraction = {

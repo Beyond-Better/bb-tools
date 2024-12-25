@@ -37,7 +37,7 @@
           "https://example.com",
           "docs/index.html"
         ],
-        "browser": "brave"
+        "browser": "chrome"
       }
     }
   ]
