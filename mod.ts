@@ -55,47 +55,46 @@
  * @module
  */
 
-export { default } from "./llm_tool.ts";
-export type { IProjectEditor } from "./project_editor.ts";
-export type { IConversationInteraction } from "./conversation.ts";
+export { default } from './llm_tool.ts';
 
+// Core interfaces
+export type { IProjectEditor } from './project_editor.ts';
+export type { IConversationInteraction } from './conversation.ts';
+
+// Message types
 export type {
-  LLMAnswerToolUse,
-  LLMMessageContentPart,
-  LLMMessageContentPartBase,
-  LLMMessageContentPartImageBlock,
-  LLMMessageContentPartImageBlockSourceMediaType,
-  LLMMessageContentParts,
-  LLMMessageContentPartTextBlock,
-  LLMMessageContentPartToolResultBlock,
-  LLMMessageContentPartToolUseBlock,
-} from "./message.ts";
+	LLMAnswerToolUse,
+	LLMMessageContentPart,
+	LLMMessageContentPartBase,
+	LLMMessageContentPartImageBlock,
+	LLMMessageContentPartImageBlockSourceMediaType,
+	LLMMessageContentParts,
+	LLMMessageContentPartTextBlock,
+	LLMMessageContentPartToolResultBlock,
+	LLMMessageContentPartToolUseBlock,
+} from './message.ts';
 
+// Shared types
+export type { ConversationStats, FileMetadata, TokenUsage, ToolStats, ToolUsageStats } from './types.ts';
+
+// Tool types
 export type {
-  ConversationStats,
-  FileMetadata,
-  TokenUsage,
-  ToolStats,
-  ToolUsageStats,
-} from "./types.ts";
+	LLMToolConfig,
+	LLMToolFeatures,
+	LLMToolFormatterDestination,
+	LLMToolInputSchema,
+	LLMToolLogEntryFormattedResult,
+	LLMToolRunBbResponse,
+	LLMToolRunBbResponseData,
+	LLMToolRunResult,
+	LLMToolRunResultContent,
+	LLMToolRunResultFormatter,
+	LLMToolRunToolResponse,
+	LLMToolUseInputFormatter,
+} from './llm_tool.ts';
 
-export type {
-  LLMToolConfig,
-  LLMToolFeatures,
-  LLMToolFormatterDestination,
-  LLMToolInputSchema,
-  LLMToolLogEntryFormattedResult,
-  LLMToolRunBbResponse,
-  LLMToolRunBbResponseData,
-  LLMToolRunResult,
-  LLMToolRunResultContent,
-  LLMToolRunResultFormatter,
-  LLMToolRunToolResponse,
-  LLMToolUseInputFormatter,
-} from "./llm_tool.ts";
+// Formatting utilities
+export { TOOL_STYLES_BROWSER, TOOL_STYLES_CONSOLE, TOOL_TAGS } from './llm_tool_tags.tsx';
 
-export {
-  TOOL_STYLES_BROWSER,
-  TOOL_STYLES_CONSOLE,
-  TOOL_TAGS,
-} from "./llm_tool_tags.tsx";
+// Example tools
+export * from './examples/mod.ts';

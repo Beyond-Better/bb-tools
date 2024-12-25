@@ -1,16 +1,30 @@
 {
   "name": "@beyondbetter/tools",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "exports": {
     ".": "./mod.ts",
-    "./llm-tools": "./llm_tool.ts"
+    "./llm-tools": "./llm_tool.ts",
+    "./examples": "./examples/mod.ts",
+    "./examples/search_project": "./examples/search_project/mod.ts"
   },
   "tasks": {
     "publish": "deno publish",
+    "test": "deno test --allow-read --allow-write",
     "format": "deno fmt",
-    "check-types": "deno check llm_tool.ts",
-    "update-deps": "deno cache llm_tool.ts"
+    "check": "deno check mod.ts",
+    "update-deps": "deno cache mod.ts"
+  },
+  "fmt": {
+    "files": {
+      "include": ["*.ts", "*.tsx", "**/*.ts", "**/*.tsx"]
+    },
+    "options": {
+      "useTabs": false,
+      "lineWidth": 100,
+      "indentWidth": 2,
+      "singleQuote": true
+    }
   },
   "importMap": "./import_map.json",
   "compilerOptions": {

@@ -149,7 +149,7 @@ const mockInteraction: IConversationInteraction = {
 const mockToolUse: LLMAnswerToolUse = {
   id: "test-id",
   name: "your-tool",
-  parameters: {
+  toolInput: {
     // Tool-specific parameters
   },
 };

@@ -87,7 +87,7 @@ class FileSystemTool extends LLMTool {
     toolUse: LLMAnswerToolUse,
     projectEditor: IProjectEditor,
   ): Promise<LLMToolRunResult> {
-    const { filePath } = toolUse.parameters;
+    const { filePath } = toolUse.toolInput;
     if (!isPathWithinProject(projectEditor.projectRoot, filePath)) {
       throw new Error("Invalid path");
     }
@@ -114,7 +114,7 @@ class DataProcessingTool extends LLMTool {
     toolUse: LLMAnswerToolUse,
     projectEditor: IProjectEditor,
   ): Promise<LLMToolRunResult> {
-    const { data } = toolUse.parameters;
+    const { data } = toolUse.toolInput;
     // Process data
     return {
       toolResults: processedData,
@@ -148,7 +148,7 @@ class NetworkTool extends LLMTool {
     toolUse: LLMAnswerToolUse,
     projectEditor: IProjectEditor,
   ): Promise<LLMToolRunResult> {
-    const { url } = toolUse.parameters;
+    const { url } = toolUse.toolInput;
     // Fetch external resource
   }
 }

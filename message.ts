@@ -34,7 +34,7 @@ export interface LLMMessageContentPartToolUseBlock
   type: "tool_use";
   id: string;
   name: string;
-  parameters: Record<string, unknown>;
+  toolInput: Record<string, unknown>;
 }
 
 /** Tool result block */
@@ -60,5 +60,5 @@ export type LLMMessageContentParts = LLMMessageContentPart[];
 export interface LLMAnswerToolUse {
   id: string;
   name: string;
-  parameters: Record<string, unknown>;
+  toolInput: Record<string, unknown>;
 }
