@@ -1,3 +1,17 @@
+/**
+ * Tests for the Open in Browser tool.
+ * Verifies URL handling, browser selection, error cases, and output formatting.
+ *
+ * Test Coverage:
+ * - URL validation and handling
+ * - Local file path resolution
+ * - Browser selection and customization
+ * - Error handling and validation
+ * - Output formatting for browser and console
+ *
+ * @module
+ */
+
 import {
   assertEquals,
   assertRejects,
@@ -8,13 +22,25 @@ import { withTestProject } from 'jsr:@beyondbetter/tools/testing';
 import OpenInBrowserTool from './tool.ts';
 import type { IConversationInteraction, LLMAnswerToolUse } from 'jsr:@beyondbetter/tools';
 
-// Mock interaction
+/**
+ * Mock implementation of IConversationInteraction.
+ * Provides minimal implementation for testing.
+ */
+
 const mockInteraction: IConversationInteraction = {
   getFileMetadata: () => ({ type: 'text', size: 100, last_modified: new Date().toISOString() }),
   readProjectFileContent: async () => 'test content',
 };
 
-// Mock tool use factory
+/**
+ * Creates mock tool use objects for testing.
+ * Generates consistent test data with configurable URLs and browser.
+ *
+ * @param urls - Array of URLs or file paths to open
+ * @param browser - Optional browser selection
+ * @returns Mock tool use object
+ */
+
 function createToolUse(urls: string[], browser = 'default'): LLMAnswerToolUse {
   return {
     id: 'test-id',
@@ -23,6 +49,10 @@ function createToolUse(urls: string[], browser = 'default'): LLMAnswerToolUse {
   };
 }
 
+/**
+ * Tests URL validation functionality.
+ * Verifies handling of web URLs and file URLs.
+ */
 Deno.test({
   name: 'OpenInBrowserTool - validates URLs correctly',
   async fn() {
@@ -61,6 +91,10 @@ Deno.test({
   },
 });
 
+/**
+ * Tests local file path handling.
+ * Verifies conversion of project paths to file:// URLs.
+ */
 Deno.test({
   name: 'OpenInBrowserTool - handles local file paths',
   async fn() {
@@ -99,6 +133,10 @@ Deno.test({
   },
 });
 
+/**
+ * Tests browser selection functionality.
+ * Verifies default, specific, and custom browser handling.
+ */
 Deno.test({
   name: 'OpenInBrowserTool - handles browser selection',
   async fn() {
@@ -143,6 +181,10 @@ Deno.test({
   },
 });
 
+/**
+ * Tests error handling scenarios.
+ * Verifies URL limits, invalid paths, and security boundaries.
+ */
 Deno.test({
   name: 'OpenInBrowserTool - handles errors correctly',
   async fn() {
@@ -196,6 +238,10 @@ Deno.test({
   },
 });
 
+/**
+ * Tests browser output formatting.
+ * Verifies JSX element generation for single and multiple URLs.
+ */
 Deno.test({
   name: 'OpenInBrowserTool - formats browser output correctly',
   fn() {
@@ -220,6 +266,10 @@ Deno.test({
   },
 });
 
+/**
+ * Tests console output formatting.
+ * Verifies text formatting with ANSI colors for single and multiple URLs.
+ */
 Deno.test({
   name: 'OpenInBrowserTool - formats console output correctly',
   fn() {

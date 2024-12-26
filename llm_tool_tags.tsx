@@ -1,9 +1,68 @@
-/** @jsxRuntime automatic */
-/** @jsxImportSource npm:preact@10.25.3 */
+/**
+ * Destination-specific formatting components and utilities for BB Tools Framework.
+ * Provides core formatting functions and components for consistent content
+ * presentation across browser and console destinations.
+ *
+ * Features:
+ * - Browser destination: JSX components with Tailwind styling
+ * - Console destination: ANSI color text formatting
+ * - Shared formatting utilities for numbers, dates, etc.
+ * - Consistent structure across destinations
+ * - Rich set of content type formatters
+ * - Flexible layout components
+ *
+ * @example Browser Usage
+ * ```tsx
+ * import { TOOL_TAGS_BROWSER } from '@beyondbetter/tools';
+ *
+ * const output = (
+ *   <div>
+ *     {TOOL_TAGS_BROWSER.content.title('Tool Result', 'Search')}
+ *     {TOOL_TAGS_BROWSER.content.filename('src/config.ts')}
+ *     {TOOL_TAGS_BROWSER.content.size(1024)}
+ *   </div>
+ * );
+ * ```
+ *
+ * @example Console Usage
+ * ```ts
+ * import { TOOL_STYLES_CONSOLE } from '@beyondbetter/tools';
+ *
+ * const output = [
+ *   TOOL_STYLES_CONSOLE.content.title('Tool Result', 'Search'),
+ *   TOOL_STYLES_CONSOLE.content.filename('src/config.ts'),
+ *   TOOL_STYLES_CONSOLE.content.size(1024)
+ * ].join('\n');
+ * ```
+ *
+ * @module
+ * @jsxRuntime automatic
+ * @jsxImportSource npm:preact@10.25.3
+ */
+
 import type { JSX } from 'preact/jsx-runtime';
 import { colors } from 'cliffy/ansi/colors';
 
-// Helper functions for formatting
+/**
+ * Helper functions for consistent number and date formatting.
+ * Used by both browser and console formatters.
+ * @internal
+ */
+
+/**
+ * Formats a number using locale-specific formatting.
+ * Supports custom fraction digit settings.
+ *
+ * @param num - Number to format
+ * @param opts - Formatting options
+ * @returns Formatted number string
+ *
+ * @example
+ * ```ts
+ * formatNumber(1234.5678, { maximumFractionDigits: 2 })
+ * // Returns: "1,234.57"
+ * ```
+ */
 const formatNumber = (
   num: number,
   opts: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
@@ -11,6 +70,19 @@ const formatNumber = (
   return new Intl.NumberFormat('en-US', opts).format(num);
 };
 
+/**
+ * Formats a duration in milliseconds into a human-readable string.
+ * Automatically selects appropriate units (days, hours, minutes, seconds).
+ *
+ * @param ms - Duration in milliseconds
+ * @returns Formatted duration string
+ *
+ * @example
+ * ```ts
+ * formatDuration(3661000)
+ * // Returns: "1h 1m"
+ * ```
+ */
 const formatDuration = (ms: number): string => {
   const seconds = Math.floor(ms / 1000);
   const minutes = Math.floor(seconds / 60);
@@ -23,6 +95,19 @@ const formatDuration = (ms: number): string => {
   return `${seconds}s`;
 };
 
+/**
+ * Formats a date into a relative time string (e.g., "2 hours ago").
+ * Uses the most appropriate unit based on elapsed time.
+ *
+ * @param date - Date to format
+ * @returns Relative time string
+ *
+ * @example
+ * ```ts
+ * formatTimeAgo(new Date(Date.now() - 3600000))
+ * // Returns: "1 hour ago"
+ * ```
+ */
 const formatTimeAgo = (date: Date): string => {
   const now = new Date();
   const diff = now.getTime() - date.getTime();
@@ -37,6 +122,22 @@ const formatTimeAgo = (date: Date): string => {
 };
 
 // Helper function for converting boolean values to strings
+/**
+ * Formats a boolean value into a string using various format patterns.
+ * Supports multiple format styles for different contexts.
+ *
+ * @param value - Boolean value to format
+ * @param format - Format pattern to use
+ * @returns Formatted string
+ *
+ * @example
+ * ```ts
+ * formatBoolean(true, 'enabled/disabled')
+ * // Returns: "Enabled"
+ * formatBoolean(false, 'yes/no')
+ * // Returns: "No"
+ * ```
+ */
 const formatBoolean = (
   value: boolean,
   format: 'yes/no' | 'enabled/disabled' | 'included/excluded' | string = 'yes/no',
@@ -50,6 +151,25 @@ const formatBoolean = (
     : (value ? format.split('/')[0] : format.split('/')[1]).toUpperCase();
 };
 
+/**
+ * Browser destination styles using Tailwind CSS classes.
+ * Provides consistent styling for content in browser environments.
+ *
+ * Categories:
+ * - Base styles for layout and structure
+ * - Content-specific styles (code, data, files, etc.)
+ * - Status indicators and badges
+ * - Typography and formatting
+ *
+ * @example
+ * ```tsx
+ * <div className={TOOL_STYLES_BROWSER.base.container}>
+ *   <pre className={TOOL_STYLES_BROWSER.base.pre}>
+ *     {content}
+ *   </pre>
+ * </div>
+ * ```
+ */
 export const TOOL_STYLES_BROWSER = {
   base: {
     container: 'rounded-lg prose dark:prose-invert max-w-none py-1 px-4',
@@ -140,6 +260,25 @@ export const TOOL_STYLES_BROWSER = {
 };
 
 // Console styling functions using Cliffy colors
+/**
+ * Console destination styles using ANSI color codes.
+ * Provides consistent text formatting for content in terminal environments.
+ *
+ * Categories:
+ * - Base text formatting
+ * - Content-specific formatting
+ * - Status and error indicators
+ * - Progress and metrics formatting
+ *
+ * @example
+ * ```ts
+ * console.log(
+ *   TOOL_STYLES_CONSOLE.content.title('Search Results', 'search') +
+ *   '\n' +
+ *   TOOL_STYLES_CONSOLE.content.filename('config.ts')
+ * );
+ * ```
+ */
 export const TOOL_STYLES_CONSOLE = {
   base: {
     label: (text: string): string => colors.bold(text),
@@ -546,7 +685,36 @@ export const createToolTruncated = (
 );
 
 // Export a single object for tag functions
-export const TOOL_TAGS = {
+/**
+ * React/Preact components for browser destination formatting.
+ * Provides pre-styled components for consistent content presentation.
+ *
+ * Component Categories:
+ * - Base layout components (container, box, list)
+ * - Content formatters (code, data, files)
+ * - Status indicators and badges
+ * - Typography and text formatting
+ *
+ * Components are organized into categories:
+ * - base: Core layout components (container, box, list, etc.)
+ * - content: Type-specific formatters (filename, url, date, etc.)
+ *
+ * @example
+ * ```tsx
+ * const ToolOutput = () => (
+ *   <>
+ *     {TOOL_TAGS_BROWSER.content.title('Results', 'search')}
+ *     {TOOL_TAGS_BROWSER.base.container(
+ *       <>
+ *         {TOOL_TAGS_BROWSER.content.filename('config.ts')}
+ *         {TOOL_TAGS_BROWSER.content.size(1024)}
+ *       </>
+ *     )}
+ *   </>
+ * );
+ * ```
+ */
+export const TOOL_TAGS_BROWSER = {
   base: {
     container: createToolContent,
     box: createToolBox,

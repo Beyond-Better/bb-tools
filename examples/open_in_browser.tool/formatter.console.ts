@@ -1,3 +1,17 @@
+/**
+ * Console destination formatter for the Open in Browser tool.
+ * Formats tool input and results for console-based environments.
+ * Uses ANSI colors and text formatting for structured output.
+ *
+ * Features:
+ * - Text-based representation of URLs
+ * - Browser selection formatting
+ * - Success/failure status indicators
+ * - Color-coded output sections
+ *
+ * @module
+ */
+
 import { stripIndents } from 'common-tags';
 import LLMTool, {
   type LLMToolInputSchema,
@@ -5,6 +19,27 @@ import LLMTool, {
 } from 'jsr:@beyondbetter/tools';
 import type { LLMToolOpenInBrowserInput, LLMToolOpenInBrowserResult } from './types.ts';
 
+/**
+ * Formats tool input for console destination.
+ * Creates text-based representation of URLs and browser selection.
+ *
+ * @param toolInput - Validated tool input parameters
+ * @returns Formatted result for console display
+ *
+ * @example
+ * ```ts
+ * const formatted = formatLogEntryToolUse({
+ *   urls: ['https://example.com'],
+ *   browser: 'chrome'
+ * });
+ * // Returns:
+ * // Tool Use: Open in Browser
+ * // Opening URLs in browser...
+ * // URLs to Open:
+ * // • https://example.com
+ * // Using Browser: chrome
+ * ```
+ */
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
 ): LLMToolLogEntryFormattedResult {
@@ -29,6 +64,31 @@ export function formatLogEntryToolUse(
   };
 }
 
+/**
+ * Formats tool results for console destination.
+ * Creates text output showing operation outcomes with ANSI colors.
+ *
+ * @param resultContent - Results from tool execution
+ * @returns Formatted result for console display
+ *
+ * @example
+ * ```ts
+ * const formatted = formatLogEntryToolResult({
+ *   toolResult: { /* ... */ },
+ *   bbResponse: {
+ *     data: {
+ *       opensSuccess: ['URL opened successfully'],
+ *       opensError: []
+ *     }
+ *   }
+ * });
+ * // Returns:
+ * // Tool Result: Open in Browser
+ * // 1 opened
+ * // URLs Opened:
+ * // URL opened successfully
+ * ```
+ */
 export const formatLogEntryToolResult = (
   resultContent: LLMToolOpenInBrowserResult,
 ): LLMToolLogEntryFormattedResult => {

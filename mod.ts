@@ -49,7 +49,7 @@
  *
  * ## Formatting
  *
- * - Browser: {@link TOOL_STYLES_BROWSER}, {@link TOOL_TAGS}
+ * - Browser: {@link TOOL_STYLES_BROWSER}, {@link TOOL_TAGS_BROWSER}
  * - Console: {@link TOOL_STYLES_CONSOLE}
  *
  * @module
@@ -100,7 +100,7 @@ export type {
 } from './llm_tool.ts';
 
 // Formatting utilities
-export { TOOL_STYLES_BROWSER, TOOL_STYLES_CONSOLE, TOOL_TAGS } from './llm_tool_tags.tsx';
+export { TOOL_STYLES_BROWSER, TOOL_STYLES_CONSOLE, TOOL_TAGS_BROWSER } from './llm_tool_tags.tsx';
 
 // Example tools
 export * from './examples/mod.ts';

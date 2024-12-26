@@ -1,10 +1,34 @@
 /** @jsxImportSource preact */
+/**
+ * Browser destination formatter for the Open in Browser tool.
+ * Formats tool input and results for display in browser-based environments.
+ * Creates JSX elements suitable for React/Preact rendering.
+ *
+ * @module
+ */
+
 import LLMTool, {
   type LLMToolInputSchema,
   type LLMToolLogEntryFormattedResult,
 } from 'jsr:@beyondbetter/tools';
 import type { LLMToolOpenInBrowserInput, LLMToolOpenInBrowserResult } from './types.ts';
 
+/**
+ * Formats tool input for browser destination.
+ * Creates structured JSX elements for URL and browser selection display.
+ *
+ * @param toolInput - Validated tool input parameters
+ * @returns Formatted result for browser display
+ *
+ * @example
+ * ```tsx
+ * const formatted = formatLogEntryToolUse({
+ *   urls: ['https://example.com'],
+ *   browser: 'chrome'
+ * });
+ * // Returns JSX elements for browser display
+ * ```
+ */
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
 ): LLMToolLogEntryFormattedResult {
@@ -28,6 +52,27 @@ export function formatLogEntryToolUse(
   };
 }
 
+/**
+ * Formats tool results for browser destination.
+ * Creates JSX elements showing operation outcomes and any errors.
+ *
+ * @param resultContent - Results from tool execution
+ * @returns Formatted result for browser display
+ *
+ * @example
+ * ```tsx
+ * const formatted = formatLogEntryToolResult({
+ *   toolResult: { /* ... */ },
+ *   bbResponse: {
+ *     data: {
+ *       opensSuccess: ['URL opened'],
+ *       opensError: []
+ *     }
+ *   }
+ * });
+ * // Returns JSX elements showing results
+ * ```
+ */
 export const formatLogEntryToolResult = (
   resultContent: LLMToolOpenInBrowserResult,
 ): LLMToolLogEntryFormattedResult => {

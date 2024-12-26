@@ -1,3 +1,17 @@
+/**
+ * Tests for the Search Project tool.
+ * Verifies search functionality, input validation, and output formatting.
+ *
+ * Test Coverage:
+ * - Basic search functionality
+ * - Input validation
+ * - Browser output formatting
+ * - Console output formatting
+ * - Error handling
+ *
+ * @module
+ */
+
 import { assertEquals, assertStringIncludes } from '@std/assert';
 import type {
   FileMetadata,
@@ -9,7 +23,15 @@ import type {
 } from '@beyondbetter/tools';
 import SearchProjectTool from './tool.ts';
 
-// Mock implementations
+/**
+ * Mock implementations of core interfaces for testing.
+ * Provides minimal implementations that satisfy interface requirements.
+ */
+
+/**
+ * Mock project editor for testing.
+ * Simulates a basic project environment without actual file operations.
+ */
 const mockProjectEditor: IProjectEditor = {
   projectId: 'test-project',
   projectRoot: '/test/project',
@@ -19,6 +41,11 @@ const mockProjectEditor: IProjectEditor = {
   prepareFilesForConversation: async () => [],
 };
 
+/**
+ * Mock conversation interaction for testing.
+ * Provides stub implementations for all required methods.
+ * Returns empty or default values for most operations.
+ */
 const mockConversationInteraction: IConversationInteraction = {
   getFileMetadata: () => undefined,
   readProjectFileContent: async () => '',
@@ -44,6 +71,20 @@ const mockConversationInteraction: IConversationInteraction = {
   createFileContentBlocks: async () => null,
 };
 
+/**
+ * Tests basic search functionality.
+ * Verifies tool initialization, execution, and result structure.
+ *
+ * @example Expected Usage
+ * ```ts
+ * const tool = new SearchProjectTool('search', 'description', {});
+ * const result = await tool.runTool(interaction, {
+ *   id: 'test',
+ *   name: 'search',
+ *   toolInput: { filePattern: '*.ts' }
+ * }, projectEditor);
+ * ```
+ */
 Deno.test({
   name: 'SearchProjectTool - Basic functionality',
   async fn() {
@@ -74,6 +115,19 @@ Deno.test({
   },
 });
 
+/**
+ * Tests browser-based output formatting.
+ * Verifies JSX element generation and content structure.
+ *
+ * @example Expected Output Structure
+ * ```tsx
+ * {
+ *   title: <JSX.Element>,
+ *   content: <JSX.Element>,
+ *   preview: string
+ * }
+ * ```
+ */
 Deno.test({
   name: 'SearchProjectTool - Browser formatter',
   fn() {
@@ -100,6 +154,19 @@ Deno.test({
   },
 });
 
+/**
+ * Tests console-based output formatting.
+ * Verifies text formatting with ANSI colors and layout.
+ *
+ * @example Expected Output Structure
+ * ```ts
+ * {
+ *   title: string,    // With ANSI color codes
+ *   content: string,  // With indentation and formatting
+ *   preview: string   // Summary text
+ * }
+ * ```
+ */
 Deno.test({
   name: 'SearchProjectTool - Console formatter',
   fn() {
@@ -126,6 +193,16 @@ Deno.test({
   },
 });
 
+/**
+ * Tests input validation functionality.
+ * Verifies schema validation for various input combinations.
+ *
+ * Test Cases:
+ * - Valid input with all optional fields
+ * - Invalid date formats
+ * - Missing required fields
+ * - Invalid field types
+ */
 Deno.test({
   name: 'SearchProjectTool - Input validation',
   fn() {
@@ -152,6 +229,16 @@ Deno.test({
   },
 });
 
+/**
+ * Tests result formatting for both browser and console output.
+ * Verifies consistent formatting across different environments.
+ *
+ * Test Cases:
+ * - Browser output with JSX elements
+ * - Console output with ANSI colors
+ * - File list formatting
+ * - Match count display
+ */
 Deno.test({
   name: 'SearchProjectTool - Result formatting',
   fn() {

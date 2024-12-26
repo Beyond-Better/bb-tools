@@ -1,5 +1,27 @@
 /**
- * Example tools demonstrating BB Tools framework usage
+ * Example tools demonstrating BB Tools framework usage.
+ * Provides reference implementations of common tool patterns.
+ *
+ * Available Tools:
+ * - SearchProjectTool: Search project files by content and metadata
+ * - LLMToolOpenInBrowser: Open URLs and local files in web browsers
+ *
+ * @example
+ * ```ts
+ * import { SearchProjectTool, LLMToolOpenInBrowser } from '@beyondbetter/tools/examples';
+ *
+ * // Initialize tools
+ * const search = new SearchProjectTool('search', 'Search files', {});
+ * const browser = new LLMToolOpenInBrowser('browser', 'Open URLs', {});
+ *
+ * // Use tools
+ * await search.runTool(interaction, {
+ *   id: 'tool-1',
+ *   name: 'search',
+ *   toolInput: { filePattern: '**/*.ts' }
+ * }, projectEditor);
+ * ```
+ *
  * @module
  */
 

@@ -1,10 +1,46 @@
-/** @jsxImportSource preact */
+/**
+ * Browser destination formatter for the Search Project tool.
+ * Formats search criteria and results for browser-based environments.
+ * Creates JSX elements for React/Preact rendering.
+ *
+ * Features:
+ * - Search parameter formatting with JSX
+ * - File path representation components
+ * - Error state handling components
+ * - Success/failure indicators
+ * - Hierarchical component structure
+ * - Size and date formatting components
+ *
+ * @module
+ * @jsxImportSource preact
+ */
+
 import LLMTool, {
   type LLMToolInputSchema,
   type LLMToolLogEntryFormattedResult,
 } from '@beyondbetter/tools';
 import type { SearchProjectInput } from './tool.ts';
 
+/**
+ * Formats search input for browser destination.
+ * Creates JSX elements representing search parameters.
+ *
+ * @param toolInput - Validated search parameters
+ * @returns Formatted result for browser display
+ *
+ * @example
+ * ```tsx
+ * const formatted = formatLogEntryToolUse({
+ *   contentPattern: 'export',
+ *   filePattern: '**/*.ts',
+ *   dateAfter: '2024-01-01'
+ * });
+ * // Returns JSX elements showing:
+ * // - Content pattern with regex formatting
+ * // - File pattern with path formatting
+ * // - Date criteria with date formatting
+ * ```
+ */
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
 ): LLMToolLogEntryFormattedResult {
@@ -86,6 +122,28 @@ export function formatLogEntryToolUse(
   };
 }
 
+/**
+ * Formats search results for browser destination.
+ * Creates JSX elements showing matched files and errors.
+ *
+ * @param resultContent - Raw search results
+ * @returns Formatted result for browser display
+ *
+ * @example
+ * ```tsx
+ * const formatted = formatLogEntryToolResult(
+ *   'Found 3 files matching criteria:\n' +
+ *   '<files>\n' +
+ *   'src/config.ts\n' +
+ *   'src/types.ts\n' +
+ *   'src/utils.ts\n' +
+ *   '</files>'
+ * );
+ * // Returns JSX elements showing:
+ * // - Success status
+ * // - List of found files with path formatting
+ * ```
+ */
 export function formatLogEntryToolResult(
   resultContent: unknown,
 ): LLMToolLogEntryFormattedResult {

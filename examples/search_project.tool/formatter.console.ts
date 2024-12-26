@@ -1,3 +1,19 @@
+/**
+ * Console destination formatter for the Search Project tool.
+ * Formats search criteria and results for console-based environments.
+ * Creates structured text output with ANSI colors and formatting.
+ *
+ * Features:
+ * - Search parameter formatting
+ * - File path representation
+ * - Error state handling
+ * - Success/failure indicators
+ * - Hierarchical output structure
+ * - Size and date formatting
+ *
+ * @module
+ */
+
 import { stripIndents } from 'common-tags';
 import LLMTool, {
   type LLMToolInputSchema,
@@ -5,6 +21,29 @@ import LLMTool, {
 } from '@beyondbetter/tools';
 import type { SearchProjectInput } from './tool.ts';
 
+/**
+ * Formats search input for console destination.
+ * Creates text-based representation of search parameters.
+ *
+ * @param toolInput - Validated search parameters
+ * @returns Formatted result for console display
+ *
+ * @example
+ * ```ts
+ * const formatted = formatLogEntryToolUse({
+ *   contentPattern: 'export',
+ *   filePattern: '**/*.ts',
+ *   dateAfter: '2024-01-01'
+ * });
+ * // Returns:
+ * // Tool Use: Search Project
+ * // Searching project files...
+ * // Search Parameters:
+ * // • Content pattern: export (case-insensitive)
+ * // • File pattern: **/*.ts
+ * // • Modified after: 2024-01-01
+ * ```
+ */
 export function formatLogEntryToolUse(
   toolInput: LLMToolInputSchema,
 ): LLMToolLogEntryFormattedResult {
@@ -67,6 +106,32 @@ export function formatLogEntryToolUse(
   };
 }
 
+/**
+ * Formats search results for console destination.
+ * Creates text output showing matched files and errors.
+ *
+ * @param resultContent - Raw search results
+ * @returns Formatted result for console display
+ *
+ * @example
+ * ```ts
+ * const formatted = formatLogEntryToolResult(
+ *   'Found 3 files matching criteria:\n' +
+ *   '<files>\n' +
+ *   'src/config.ts\n' +
+ *   'src/types.ts\n' +
+ *   'src/utils.ts\n' +
+ *   '</files>'
+ * );
+ * // Returns:
+ * // Tool Result: Search Project
+ * // Search completed successfully
+ * // Files Found:
+ * // • src/config.ts
+ * // • src/types.ts
+ * // • src/utils.ts
+ * ```
+ */
 export function formatLogEntryToolResult(
   resultContent: unknown,
 ): LLMToolLogEntryFormattedResult {

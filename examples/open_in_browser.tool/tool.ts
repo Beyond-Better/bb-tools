@@ -1,3 +1,29 @@
+/**
+ * Open in Browser Tool for BB Tools Framework.
+ * Provides functionality to open URLs or local files in web browsers.
+ * Supports both system default and specific browsers.
+ *
+ * @example
+ * ```ts
+ * const tool = new LLMToolOpenInBrowser(
+ *   'open_in_browser',
+ *   'Open URLs in a web browser',
+ *   {}
+ * );
+ *
+ * await tool.runTool(interaction, {
+ *   id: 'tool-1',
+ *   name: 'open_in_browser',
+ *   toolInput: {
+ *     urls: ['https://example.com'],
+ *     browser: 'chrome'
+ *   }
+ * }, projectEditor);
+ * ```
+ *
+ * @module
+ */
+
 import LLMTool, {
   type IConversationInteraction,
   type IProjectEditor,
@@ -19,10 +45,66 @@ import {
 } from './formatter.console.ts';
 import type { LLMToolOpenInBrowserInput, LLMToolOpenInBrowserResult } from './types.ts';
 
+/**
+ * Tool for opening URLs and local files in web browsers.
+ * Supports multiple URLs, local file paths, and browser selection.
+ *
+ * Features:
+ * - Open up to 6 URLs simultaneously
+ * - Convert local file paths to file:// URLs
+ * - Use system default or specific browsers
+ * - Validate URLs and file paths
+ * - Track success/failure per URL
+ *
+ * @example
+ * ```ts
+ * const browser = new LLMToolOpenInBrowser(
+ *   'open_in_browser',
+ *   'Open URLs in browser',
+ *   {},
+ *   { requiresNetwork: true }
+ * );
+ *
+ * // Open multiple URLs in Firefox
+ * await browser.runTool(interaction, {
+ *   id: 'tool-1',
+ *   name: 'open_in_browser',
+ *   toolInput: {
+ *     urls: ['https://example.com', 'src/docs/index.html'],
+ *     browser: 'firefox'
+ *   }
+ * }, projectEditor);
+ * ```
+ */
 export default class LLMToolOpenInBrowser extends LLMTool {
+  /**
+   * List of predefined browser identifiers.
+   * These map to specific browser applications on the system.
+   * @private
+   */
   private readonly predefinedBrowsers = ['chrome', 'firefox', 'edge', 'safari'] as const;
+  /**
+   * Maximum number of URLs that can be opened in one operation.
+   * Limits batch operations to prevent resource exhaustion.
+   * @private
+   */
   private readonly maxUrls = 6;
 
+  /**
+   * JSON Schema for tool input validation.
+   * Defines expected format for urls and browser selection.
+   *
+   * @example
+   * ```ts
+   * const input = {
+   *   urls: ['https://example.com'],
+   *   browser: 'chrome'
+   * };
+   * if (tool.validateInput(input)) {
+   *   // Input is valid
+   * }
+   * ```
+   */
   get inputSchema(): LLMToolInputSchema {
     return {
       type: 'object',
@@ -63,6 +145,14 @@ export default class LLMToolOpenInBrowser extends LLMTool {
       : formatLogEntryToolResultBrowser(resultContent);
   }
 
+  /**
+   * Checks if a string is a valid URL.
+   * Uses URL constructor for validation.
+   *
+   * @param urlString - String to validate as URL
+   * @returns True if string is a valid URL
+   * @private
+   */
   private isValidUrl(urlString: string): boolean {
     try {
       new URL(urlString);
@@ -72,6 +162,16 @@ export default class LLMToolOpenInBrowser extends LLMTool {
     }
   }
 
+  /**
+   * Opens a URL in the specified browser.
+   * Maps browser names to system applications.
+   *
+   * @param url - URL to open
+   * @param browser - Browser to use (default='default')
+   * @returns Promise resolving to success message
+   * @throws Error if URL cannot be opened
+   * @private
+   */
   private async openUrl(url: string, browser = 'default'): Promise<string> {
     try {
       const useBrowser = browser === 'default'
@@ -93,6 +193,16 @@ export default class LLMToolOpenInBrowser extends LLMTool {
     }
   }
 
+  /**
+   * Resolves a local file path to a file:// URL.
+   * Validates path is within project and exists.
+   *
+   * @param projectEditor - Project editor instance
+   * @param path - Local file path to resolve
+   * @returns Promise resolving to file:// URL
+   * @throws Error if path is invalid or file doesn't exist
+   * @private
+   */
   private async resolveLocalPath(projectEditor: IProjectEditor, path: string): Promise<string> {
     // Check if path is within project
     if (!projectEditor.isPathWithinProject(path)) {
@@ -111,6 +221,16 @@ export default class LLMToolOpenInBrowser extends LLMTool {
     return `file://${absolutePath}`;
   }
 
+  /**
+   * Executes the tool to open URLs in browser.
+   * Handles both web URLs and local file paths.
+   *
+   * @param _interaction - Conversation interaction context (unused)
+   * @param toolUse - Current tool use information
+   * @param projectEditor - Project editor for resolving paths
+   * @returns Promise resolving to tool execution results
+   * @throws Error if too many URLs provided
+   */
   async runTool(
     _interaction: IConversationInteraction,
     toolUse: LLMAnswerToolUse,

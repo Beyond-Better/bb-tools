@@ -1,3 +1,38 @@
+/**
+ * Search Project Tool for BB Tools Framework.
+ * Provides functionality to search project files by content pattern (grep),
+ * file name pattern (glob), modification date, and file size.
+ *
+ * Features:
+ * - Content search with regex support
+ * - File name pattern matching with globs
+ * - Date range filtering
+ * - File size filtering
+ * - Case sensitivity control
+ *
+ * @example
+ * ```ts
+ * const tool = new SearchProjectTool(
+ *   'search_project',
+ *   'Search project files',
+ *   {}
+ * );
+ *
+ * // Search TypeScript files modified in 2024
+ * await tool.runTool(interaction, {
+ *   id: 'tool-1',
+ *   name: 'search_project',
+ *   toolInput: {
+ *     filePattern: '**/*.ts',
+ *     dateAfter: '2024-01-01',
+ *     dateBefore: '2024-12-31'
+ *   }
+ * }, projectEditor);
+ * ```
+ *
+ * @module
+ */
+
 import LLMTool, {
   type IConversationInteraction,
   type IProjectEditor,
@@ -16,6 +51,21 @@ import {
   formatLogEntryToolUse as formatLogEntryToolUseConsole,
 } from './formatter.console.ts';
 
+/**
+ * Input parameters for project search operations.
+ * Supports multiple search criteria that can be combined.
+ *
+ * @example
+ * ```ts
+ * const input: SearchProjectInput = {
+ *   contentPattern: 'function.*search',
+ *   caseSensitive: true,
+ *   filePattern: '**/*.ts',
+ *   dateAfter: '2024-01-01',
+ *   sizeMax: 1048576
+ * };
+ * ```
+ */
 export interface SearchProjectInput {
   contentPattern?: string;
   caseSensitive?: boolean;
@@ -26,6 +76,38 @@ export interface SearchProjectInput {
   sizeMax?: number;
 }
 
+/**
+ * Tool for searching project files using various criteria.
+ * Supports content search, file patterns, date ranges, and size filters.
+ *
+ * Key Features:
+ * - Regex-based content search
+ * - Glob pattern file matching
+ * - Date range filtering
+ * - File size filtering
+ * - Case sensitivity control
+ * - Error handling and reporting
+ *
+ * @example
+ * ```ts
+ * const search = new SearchProjectTool(
+ *   'search_project',
+ *   'Search project files',
+ *   {},
+ *   { resourceIntensive: true }
+ * );
+ *
+ * // Search for TypeScript files containing 'export'
+ * await search.runTool(interaction, {
+ *   id: 'tool-1',
+ *   name: 'search_project',
+ *   toolInput: {
+ *     contentPattern: 'export',
+ *     filePattern: '**/*.ts'
+ *   }
+ * }, projectEditor);
+ * ```
+ */
 export default class SearchProjectTool extends LLMTool {
   get inputSchema(): LLMToolInputSchema {
     return {
@@ -172,6 +254,17 @@ ${files.length > 0 ? `\n<files>\n${files.join('\n')}\n</files>` : ''}`;
   }
 
   // Helper methods would be implemented here or imported from a utility module
+  /**
+   * Searches file contents using a regex pattern.
+   * Applies additional filters based on file metadata.
+   *
+   * @param projectRoot - Root directory to search in
+   * @param pattern - Regex pattern to search for
+   * @param caseSensitive - Whether to match case
+   * @param options - Additional search filters
+   * @returns Promise resolving to matched files and any errors
+   * @private
+   */
   private async searchFilesContent(
     projectRoot: string,
     pattern: string,
@@ -189,6 +282,15 @@ ${files.length > 0 ? `\n<files>\n${files.join('\n')}\n</files>` : ''}`;
     return { files: [] };
   }
 
+  /**
+   * Searches files based on metadata criteria only.
+   * Used when no content pattern is provided.
+   *
+   * @param projectRoot - Root directory to search in
+   * @param options - Search filters (pattern, dates, size)
+   * @returns Promise resolving to matched files and any errors
+   * @private
+   */
   private async searchFilesMetadata(
     projectRoot: string,
     options: {
