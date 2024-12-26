@@ -1,3 +1,4 @@
+/** @jsxImportSource preact */
 /**
  * Destination-specific formatting components and utilities for BB Tools Framework.
  * Provides core formatting functions and components for consistent content
@@ -36,8 +37,6 @@
  * ```
  *
  * @module
- * @jsxRuntime automatic
- * @jsxImportSource npm:preact@10.25.3
  */
 
 import type { JSX } from 'preact/jsx-runtime';

@@ -17,19 +17,15 @@
     "update-deps": "deno cache mod.ts"
   },
   "fmt": {
-    "files": {
-      "include": ["*.ts", "*.tsx", "**/*.ts", "**/*.tsx"]
-    },
-    "options": {
-      "useTabs": false,
-      "lineWidth": 100,
-      "indentWidth": 2,
-      "singleQuote": true
-    }
+    "include": ["*.json", "**/*.json", "*.ts", "*.tsx", "**/*.ts", "**/*.tsx"],
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "singleQuote": true
   },
   "importMap": "./import_map.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "npm:preact"
+    "jsxImportSource": "preact"
   }
 }
