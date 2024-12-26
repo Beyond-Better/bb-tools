@@ -284,7 +284,7 @@ abstract class LLMTool {
    *   };
    * }
    * ```
-   * 
+   *
    * @example Console Destination
    * ```ts
    * formatLogEntryToolUse(toolInput, 'console') {

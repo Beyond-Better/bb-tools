@@ -18,7 +18,7 @@
  * await search.runTool(interaction, {
  *   id: 'tool-1',
  *   name: 'search',
- *   toolInput: { filePattern: '**/*.ts' }
+ *   toolInput: { filePattern: '**\/*.ts' }
  * }, projectEditor);
  * ```
  *

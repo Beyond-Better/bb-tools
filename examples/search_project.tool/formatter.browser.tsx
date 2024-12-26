@@ -32,7 +32,7 @@ import type { SearchProjectInput } from './tool.ts';
  * ```tsx
  * const formatted = formatLogEntryToolUse({
  *   contentPattern: 'export',
- *   filePattern: '**/*.ts',
+ *   filePattern: '**\/*.ts',
  *   dateAfter: '2024-01-01'
  * });
  * // Returns JSX elements showing:

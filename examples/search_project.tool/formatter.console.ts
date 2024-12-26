@@ -32,7 +32,7 @@ import type { SearchProjectInput } from './tool.ts';
  * ```ts
  * const formatted = formatLogEntryToolUse({
  *   contentPattern: 'export',
- *   filePattern: '**/*.ts',
+ *   filePattern: '**\/*.ts',
  *   dateAfter: '2024-01-01'
  * });
  * // Returns:
@@ -40,7 +40,7 @@ import type { SearchProjectInput } from './tool.ts';
  * // Searching project files...
  * // Search Parameters:
  * // • Content pattern: export (case-insensitive)
- * // • File pattern: **/*.ts
+ * // • File pattern: **\/*.ts
  * // • Modified after: 2024-01-01
  * ```
  */

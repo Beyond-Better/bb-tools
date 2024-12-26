@@ -99,6 +99,7 @@ export interface IProjectEditor {
    * );
    * ```
    */
+  /**
    * @param interaction The conversation interaction context
    * @param files Array of file paths that were modified
    * @param contents Array of file contents or change descriptions
@@ -125,6 +126,7 @@ export interface IProjectEditor {
    * console.log(`Prepared ${files.length} files`);
    * ```
    */
+  /**
    * @param fileNames Array of file paths to prepare
    * @returns Array of prepared files with metadata
    */

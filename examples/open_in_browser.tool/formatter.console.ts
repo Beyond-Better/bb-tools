@@ -74,7 +74,7 @@ export function formatLogEntryToolUse(
  * @example
  * ```ts
  * const formatted = formatLogEntryToolResult({
- *   toolResult: { /* ... */ },
+ *   toolResult: { /* ... *\/ },
  *   bbResponse: {
  *     data: {
  *       opensSuccess: ['URL opened successfully'],

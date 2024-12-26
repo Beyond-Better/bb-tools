@@ -62,7 +62,7 @@ export function formatLogEntryToolUse(
  * @example
  * ```tsx
  * const formatted = formatLogEntryToolResult({
- *   toolResult: { /* ... */ },
+ *   toolResult: { /* ... *\/ },
  *   bbResponse: {
  *     data: {
  *       opensSuccess: ['URL opened'],

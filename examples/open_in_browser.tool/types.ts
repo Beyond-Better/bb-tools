@@ -49,7 +49,7 @@ export interface LLMToolOpenInBrowserResponseData {
  * @example
  * ```ts
  * const result: LLMToolOpenInBrowserResult = {
- *   toolResult: { /* raw tool output */ },
+ *   toolResult: { /* raw tool output *\/ },
  *   bbResponse: {
  *     data: {
  *       opensSuccess: ['URL opened successfully'],

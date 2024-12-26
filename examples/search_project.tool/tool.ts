@@ -23,7 +23,7 @@
  *   id: 'tool-1',
  *   name: 'search_project',
  *   toolInput: {
- *     filePattern: '**/*.ts',
+ *     filePattern: '**\/*.ts',
  *     dateAfter: '2024-01-01',
  *     dateBefore: '2024-12-31'
  *   }
@@ -60,7 +60,7 @@ import {
  * const input: SearchProjectInput = {
  *   contentPattern: 'function.*search',
  *   caseSensitive: true,
- *   filePattern: '**/*.ts',
+ *   filePattern: '**\/*.ts',
  *   dateAfter: '2024-01-01',
  *   sizeMax: 1048576
  * };
@@ -103,7 +103,7 @@ export interface SearchProjectInput {
  *   name: 'search_project',
  *   toolInput: {
  *     contentPattern: 'export',
- *     filePattern: '**/*.ts'
+ *     filePattern: '**\/*.ts'
  *   }
  * }, projectEditor);
  * ```
