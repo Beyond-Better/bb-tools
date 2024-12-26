@@ -136,13 +136,13 @@ export default class LLMToolOpenInBrowser extends LLMTool {
         const result = await this.openUrl(finalUrl, browser);
         toolResultContentParts.push({
           'type': 'text',
-          'text': `${result}\n`,
+          'text': `${result}`,
         });
         opensSuccess.push({ result });
       } catch (error) {
         toolResultContentParts.push({
           'type': 'text',
-          'text': `Error opening URL ${url} - ${(error as Error).message}\n`,
+          'text': `Error opening URL ${url} - ${(error as Error).message}`,
         });
         opensError.push({ url, error: (error as Error).message });
       }
