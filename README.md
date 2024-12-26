@@ -1,5 +1,9 @@
 # @beyondbetter/tools
 
+[![JSR Scope](https://jsr.io/badges/@beyondbetter)](https://jsr.io/@beyondbetter)
+[![JSR](https://jsr.io/badges/@beyondbetter/tools)](https://jsr.io/@beyondbetter/tools)
+[![JSR Score](https://jsr.io/badges/@beyondbetter/tools/score)](https://jsr.io/@beyondbetter/tools)
+
 Core tool infrastructure for building BB (Beyond Better) AI assistant tools. This package provides
 the base classes, interfaces, and types needed to create tools that can be used with the BB AI
 assistant.
