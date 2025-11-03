@@ -61,13 +61,13 @@ async function main() {
  * Current package version
  * @constant
  */
-export const VERSION = "${version}";
+export const VERSION = '${version}';
 
 /**
  * Package name
  * @constant
  */
-export const PACKAGE_NAME = "${packageName}";
+export const PACKAGE_NAME = '${packageName}';
 
 /**
  * Full version string with package name
