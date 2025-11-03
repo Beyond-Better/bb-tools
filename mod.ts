@@ -59,17 +59,32 @@ export { default } from './llm_tool.ts';
 
 // Core interfaces
 export type { IProjectEditor } from './project_editor.ts';
-export type { IConversationInteraction } from './conversation.ts';
+export type { IConversationInteraction } from './interaction.ts';
+
+// Legacy export for backward compatibility
+export type { IConversationInteraction as IConversation } from './interaction.ts';
+
+// Data source types
+export type {
+  DataSourceAccessMethod,
+  DataSourceCapability,
+  DataSourceConfig,
+  DataSourceConnection,
+  DataSourceProviderType,
+} from './data_source.ts';
 
 // Message types
 export type {
   LLMAnswerToolUse,
   LLMMessageContentPart,
+  LLMMessageContentPartAudioBlock,
   LLMMessageContentPartBase,
   LLMMessageContentPartImageBlock,
   LLMMessageContentPartImageBlockSourceMediaType,
+  LLMMessageContentPartRedactedThinkingBlock,
   LLMMessageContentParts,
   LLMMessageContentPartTextBlock,
+  LLMMessageContentPartThinkingBlock,
   LLMMessageContentPartToolResultBlock,
   LLMMessageContentPartToolUseBlock,
 } from './message.ts';

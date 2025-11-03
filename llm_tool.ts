@@ -11,7 +11,7 @@ import type { JSONSchema4 } from 'json-schema';
 import { Ajv } from 'ajv';
 
 import { TOOL_STYLES_BROWSER, TOOL_STYLES_CONSOLE, TOOL_TAGS_BROWSER } from './llm_tool_tags.tsx';
-import type { IConversationInteraction } from './conversation.ts';
+import type { IConversationInteraction } from './interaction.ts';
 import type { IProjectEditor } from './project_editor.ts';
 import type { LLMAnswerToolUse, LLMMessageContentPart, LLMMessageContentParts } from './message.ts';
 
@@ -194,6 +194,7 @@ abstract class LLMTool {
     public features: LLMToolFeatures = {},
   ) {}
 
+  // deno-lint-ignore require-await
   public async init(): Promise<LLMTool> {
     return this;
   }

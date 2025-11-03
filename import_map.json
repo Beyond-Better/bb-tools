@@ -9,6 +9,7 @@
     "common-tags": "npm:common-tags@1.8.2",
     "@std/fmt": "jsr:@std/fmt@^1.0.3",
     "@std/assert": "jsr:@std/assert@^1.0.8",
+    "@std/jsonc": "jsr:@std/jsonc@^1.0.1",
     "@std/path": "jsr:@std/path@^1.0.8",
     "@std/fs": "jsr:@std/fs@^1.0.5"
   }

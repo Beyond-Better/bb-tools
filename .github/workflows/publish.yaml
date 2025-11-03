@@ -1,11 +1,19 @@
-name: Publish
+name: Publish to JSR
+
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g., 1.0.0)'
+        required: true
+        type: string
 
 jobs:
   publish:
+    name: Publish Package
     runs-on: ubuntu-latest
 
     permissions:
@@ -13,7 +21,46 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Publish package
-        run: npx jsr publish
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v2.x
+
+      - name: Verify formatting
+        run: deno fmt --check
+
+      - name: Run linter
+        run: deno task lint
+
+      - name: Type check
+        run: deno task check
+
+#       - name: Run tests
+#         run: deno task test
+
+      - name: Extract version from tag or input
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ github.event.inputs.version }}"
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Publishing version: $VERSION"
+
+      - name: Update version in deno.jsonc
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" deno.jsonc
+          echo "Updated deno.jsonc version to $VERSION"
+          cat deno.jsonc | grep version
+
+      - name: Generate version.ts from deno.jsonc
+        run: deno task update-version
+
+      - name: Publish to JSR
+        run: deno publish --allow-dirty

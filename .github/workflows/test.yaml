@@ -1,0 +1,51 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v2.x
+
+      - name: Verify formatting
+        run: deno fmt --check
+
+      - name: Run linter
+        run: deno task lint
+
+      - name: Type check
+        run: deno task check
+
+#       - name: Run tests
+#         run: deno task test
+# 
+#       - name: Generate coverage
+#         run: deno task test:coverage
+# 
+#       - name: Upload coverage to Codecov
+#         uses: codecov/codecov-action@v4
+#         with:
+#           files: ./tests/coverage/lcov.info
+#           fail_ci_if_error: false
+#         env:
+#           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
