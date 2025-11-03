@@ -69,6 +69,19 @@ const formatNumber = (
   return new Intl.NumberFormat('en-US', opts).format(num);
 };
 
+const formatByteSize = (bytes: number, decimals = 2): string => {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const size = bytes / Math.pow(k, i);
+
+  return `${
+    formatNumber(size, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+  } ${sizes[i]}`;
+};
+
 /**
  * Formats a duration in milliseconds into a human-readable string.
  * Automatically selects appropriate units (days, hours, minutes, seconds).
@@ -171,7 +184,7 @@ const formatBoolean = (
  */
 export const TOOL_STYLES_BROWSER = {
   base: {
-    container: 'rounded-lg prose dark:prose-invert max-w-none py-1 px-4',
+    container: 'rounded-lg prose prose-sm dark:prose-invert max-w-none py-1 px-4',
     box: 'rounded-lg max-w-none py-1 px-4 whitespace-pre-wrap',
     pre:
       'p-2.5 rounded font-mono text-sm text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-900/50',
@@ -179,7 +192,9 @@ export const TOOL_STYLES_BROWSER = {
     list: 'space-y-2',
     listItem: 'ml-4',
     label: 'font-semibold text-gray-700 dark:text-gray-300',
+    text: 'text-gray-700 dark:text-gray-300',
   },
+  // Status-based styles
   status: {
     error:
       'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400',
@@ -190,19 +205,27 @@ export const TOOL_STYLES_BROWSER = {
     info:
       'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-400',
   },
+  // Content type styles
   content: {
     error: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-800 px-2 py-1 rounded',
+    // Existing styles
     code: 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700',
     data: 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700',
     filename: 'font-mono text-cyan-600 dark:text-cyan-400',
+
+    // Time-related
     timestamp: 'font-mono text-gray-600 dark:text-gray-400',
     duration: 'font-mono text-purple-600 dark:text-purple-400',
     timeRange: 'font-mono text-purple-600 dark:text-purple-400',
     timeAgo: 'font-mono text-purple-600 dark:text-purple-400',
+
+    // Numbers/Metrics
     percentage: 'font-mono text-emerald-600 dark:text-emerald-400',
     number: 'font-mono text-blue-600 dark:text-blue-400',
     bytes: 'font-mono text-blue-600 dark:text-blue-400',
     speed: 'font-mono text-blue-600 dark:text-blue-400',
+
+    // Status/States
     status: {
       running:
         'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-2 py-0.5 rounded-full text-sm',
@@ -226,6 +249,8 @@ export const TOOL_STYLES_BROWSER = {
       low: 'text-green-600 dark:text-green-400 font-semibold',
     },
     version: 'font-mono text-gray-600 dark:text-gray-400',
+
+    // UI/Display
     badge: {
       default:
         'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-2 py-0.5 rounded-full text-sm',
@@ -293,6 +318,7 @@ export const TOOL_STYLES_CONSOLE = {
     info: (text: string): string => colors.blue(text),
   },
   content: {
+    // Time-related
     timestamp: (date: Date | string): string => colors.gray(new Date(date).toISOString()),
     duration: (ms: number): string => colors.magenta(formatDuration(ms)),
     timeRange: (start: Date | string, end: Date | string): string =>
@@ -301,13 +327,12 @@ export const TOOL_STYLES_CONSOLE = {
       ),
     timeAgo: (date: Date | string): string => colors.gray(formatTimeAgo(new Date(date))),
     date: (value: Date | string): string => colors.gray(new Date(value).toLocaleString()),
+
+    // Numbers/Metrics
     percentage: (value: number, decimals = 1): string =>
       colors.green(
         `${
-          formatNumber(value, {
-            minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals,
-          })
+          formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
         }%`,
       ),
     number: (
@@ -315,31 +340,16 @@ export const TOOL_STYLES_CONSOLE = {
       opts: { minimumFractionDigits?: number; maximumFractionDigits?: number } = {},
     ): string => colors.blue(formatNumber(value, opts)),
     bytes: (value: number, decimals = 1): string => {
-      const units = ['B', 'KB', 'MB', 'GB'];
-      let size = value;
-      let unit = 0;
-      while (size >= 1024 && unit < units.length - 1) {
-        size /= 1024;
-        unit++;
-      }
-      return colors.blue(
-        `${
-          formatNumber(size, {
-            minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals,
-          })
-        } ${units[unit]}`,
-      );
+      return colors.blue(formatByteSize(value, decimals));
     },
     speed: (value: number, unit: string, decimals = 1): string =>
       colors.blue(
         `${
-          formatNumber(value, {
-            minimumFractionDigits: decimals,
-            maximumFractionDigits: decimals,
-          })
+          formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
         } ${unit}/s`,
       ),
+
+    // Status/States
     status: {
       running: (text: string): string => colors.blue(text),
       completed: (text: string): string => colors.green(text),
@@ -357,6 +367,8 @@ export const TOOL_STYLES_CONSOLE = {
       low: (text: string): string => colors.green(colors.bold(text)),
     },
     version: (version: string): string => colors.gray(version),
+
+    // UI/Display
     badge: {
       default: (text: string): string => colors.gray(text),
       primary: (text: string): string => colors.blue(text),
@@ -395,34 +407,31 @@ export const TOOL_STYLES_CONSOLE = {
         unit++;
       }
       return colors.gray(
-        `${
-          formatNumber(size, {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1,
-          })
-        } ${units[unit]}`,
+        `${formatNumber(size, { minimumFractionDigits: 1, maximumFractionDigits: 1 })} ${
+          units[unit]
+        }`,
       );
     },
     patch: (text: string): string => colors.yellow(text),
     code: (text: string): string => text,
     data: (text: string): string => colors.blue(text),
+    separator: (char = '─', length = 60): string => {
+      return colors.dim(char.repeat(length));
+    },
   },
 };
 
 // Header tag functions
-export const createToolTitle = (
-  toolRole: string,
-  toolName: string,
-): JSX.Element => {
+export const createToolTitle = (toolRole: string, toolName: string): JSX.Element => {
   const title = toolRole === 'Tool Use'
     ? 'Tool Input'
     : toolRole === 'Tool Result'
     ? 'Tool Output'
     : 'Tool';
   return (
-    <div className='bb-log-entry-title'>
+    <span className='bb-log-entry-title'>
       {title} <span className='bb-log-entry-toolname'>({toolName})</span>
-    </div>
+    </span>
   );
 };
 
@@ -469,6 +478,10 @@ export const createToolLabel = (text: string): JSX.Element => (
   <strong className={TOOL_STYLES_BROWSER.base.label}>{text}</strong>
 );
 
+export const createToolText = (text: string): JSX.Element => (
+  <span className={TOOL_STYLES_BROWSER.base.text}>{text}</span>
+);
+
 export const createToolFilename = (text: string): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.filename}>{text}</span>
 );
@@ -478,15 +491,11 @@ export const createToolUrl = (text: string): JSX.Element => (
 );
 
 export const createToolCounts = (count: number): JSX.Element => (
-  <span className={TOOL_STYLES_BROWSER.content.counts}>
-    {count.toLocaleString()}
-  </span>
+  <span className={TOOL_STYLES_BROWSER.content.counts}>{count.toLocaleString()}</span>
 );
 
 export const createToolTokenUsage = (count: number): JSX.Element => (
-  <span className={TOOL_STYLES_BROWSER.content.tokenUsage}>
-    {count.toLocaleString()}
-  </span>
+  <span className={TOOL_STYLES_BROWSER.content.tokenUsage}>{count.toLocaleString()}</span>
 );
 
 export const createToolToolName = (text: string): JSX.Element => (
@@ -525,11 +534,7 @@ export const createToolSize = (bytes: number): JSX.Element => {
     size /= 1024;
     unit++;
   }
-  return (
-    <span className={TOOL_STYLES_BROWSER.content.size}>
-      {size.toFixed(1)} {units[unit]}
-    </span>
-  );
+  return <span className={TOOL_STYLES_BROWSER.content.size}>{size.toFixed(1)} {units[unit]}</span>;
 };
 
 // Create new tag functions for time-related elements
@@ -558,15 +563,9 @@ export const createToolTimeRange = (start: Date, end: Date): JSX.Element => (
 );
 
 // Create new tag functions for numbers/metrics
-export const createToolPercentage = (
-  value: number,
-  decimals = 1,
-): JSX.Element => (
+export const createToolPercentage = (value: number, decimals = 1): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.percentage}>
-    {formatNumber(value, {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    })}%
+    {formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}%
   </span>
 );
 
@@ -578,29 +577,20 @@ export const createToolNumber = (value: number): JSX.Element => (
 
 export const createToolBytes = (bytes: number, decimals = 1): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.bytes}>
-    {formatNumber(bytes, {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    })} B
+    {formatByteSize(bytes, decimals)}
   </span>
 );
 
-export const createToolSpeed = (
-  value: number,
-  unit: string,
-  decimals = 1,
-): JSX.Element => (
+export const createToolSpeed = (value: number, unit: string, decimals = 1): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.speed}>
-    {formatNumber(value, {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    })} {unit}/s
+    {formatNumber(value, { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}{' '}
+    {unit}/s
   </span>
 );
 
 // Create new tag functions for status/states
 export const createToolStatus = (
-  status: 'running' | 'completed' | 'failed' | 'pending',
+  status: 'running' | 'completed' | 'warning' | 'failed' | 'pending',
   text?: string,
 ): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.status[status]}>
@@ -608,10 +598,7 @@ export const createToolStatus = (
   </span>
 );
 
-export const createToolProgress = (
-  current: number,
-  total: number,
-): JSX.Element => (
+export const createToolProgress = (current: number, total: number): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.progress}>
     {current}/{total}
   </span>
@@ -664,20 +651,14 @@ export const createToolLink = (text: string, href: string): JSX.Element => (
   </a>
 );
 
-export const createToolDiff = (
-  text: string,
-  type: 'add' | 'remove',
-): JSX.Element => (
+export const createToolDiff = (text: string, type: 'add' | 'remove'): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.diff[type]}>
     {type === 'add' ? '+' : '-'}
     {text}
   </span>
 );
 
-export const createToolTruncated = (
-  text: string,
-  maxLength: number,
-): JSX.Element => (
+export const createToolTruncated = (text: string, maxLength: number): JSX.Element => (
   <span className={TOOL_STYLES_BROWSER.content.truncated}>
     {text.length > maxLength ? `${text.slice(0, maxLength)}...` : text}
   </span>
@@ -714,22 +695,32 @@ export const createToolTruncated = (
  * ```
  */
 export const TOOL_TAGS_BROWSER = {
+  // base elements
   base: {
     container: createToolContent,
-    box: createToolBox,
+    box: createToolBox, // like container, but without prose
     pre: createToolPre,
     code: createToolCode,
     list: createToolList,
     label: createToolLabel,
+    text: createToolText,
   },
+  // Content elements
   content: {
+    // Standard elements
     title: createToolTitle,
     subtitle: createToolSubtitle,
+
+    // File system elements
     filename: createToolFilename,
     directory: createToolDirectory,
+
+    // Web elements
     url: createToolUrl,
     image: createToolImage,
     link: createToolLink,
+
+    // Metrics and counts
     counts: createToolCounts,
     tokenUsage: createToolTokenUsage,
     size: createToolSize,
@@ -737,20 +728,28 @@ export const TOOL_TAGS_BROWSER = {
     number: createToolNumber,
     bytes: createToolBytes,
     speed: createToolSpeed,
+
+    // Time-related
     timestamp: createToolTimestamp,
     duration: createToolDuration,
     timeRange: createToolTimeRange,
     timeAgo: createToolTimeAgo,
     date: createToolDate,
+
+    // Status and states
     status: createToolStatus,
     progress: createToolProgress,
     priority: createToolPriority,
     version: createToolVersion,
     boolean: createToolBoolean,
+
+    // UI elements
     badge: createToolBadge,
     icon: createToolIcon,
     diff: createToolDiff,
     truncated: createToolTruncated,
+
+    // Code elements
     regex: createToolRegex,
     error: createToolError,
     toolName: createToolToolName,

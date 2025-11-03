@@ -1,5 +1,6 @@
-import type { IConversationInteraction } from './conversation.ts';
+import type { IConversationInteraction } from './interaction.ts';
 import type { FileMetadata } from './types.ts';
+import type { DataSourceConnection } from './data_source.ts';
 
 /**
  * Project management module for the BB Tools Framework.
@@ -173,4 +174,50 @@ export interface IProjectEditor {
   isPathWithinProject(
     filePath: string,
   ): Promise<boolean>;
+
+  /**
+   * Resolves data source identifiers (IDs or names) to DataSourceConnection objects.
+   * Supports special 'all' identifier to get all enabled connections.
+   *
+   * This is the canonical method for resolving data sources.
+   * Tools should use this instead of directly accessing project data.
+   *
+   * @param dataSourceIds - Array of data source IDs or names, or ['all'] for all enabled sources
+   * @returns Object containing:
+   *   - primaryDsConnection: The primary data source (may be from the resolved list or undefined)
+   *   - dsConnections: Array of resolved DataSourceConnection objects
+   *   - notFound: Array of IDs/names that could not be resolved
+   *
+   * @example Get specific data sources
+   * ```ts
+   * const { dsConnections, notFound } = projectEditor.getDsConnectionsById([
+   *   'filesystem-local',
+   *   'notion-work'
+   * ]);
+   * if (notFound.length > 0) {
+   *   console.warn(`Could not find: ${notFound.join(', ')}`);
+   * }
+   * ```
+   *
+   * @example Get all enabled data sources
+   * ```ts
+   * const { dsConnections } = projectEditor.getDsConnectionsById(['all']);
+   * console.log(`Found ${dsConnections.length} enabled data sources`);
+   * ```
+   *
+   * @example Get primary data source (omit parameter)
+   * ```ts
+   * const { primaryDsConnection, dsConnections } = projectEditor.getDsConnectionsById();
+   * if (primaryDsConnection) {
+   *   console.log(`Primary: ${primaryDsConnection.name}`);
+   * }
+   * ```
+   */
+  getDsConnectionsById(
+    dataSourceIds?: Array<string>,
+  ): {
+    primaryDsConnection: DataSourceConnection | undefined;
+    dsConnections: DataSourceConnection[];
+    notFound: string[];
+  };
 }

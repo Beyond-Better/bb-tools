@@ -49,8 +49,46 @@ export interface LLMMessageContentPartBase {
  * ```
  */
 export interface LLMMessageContentPartTextBlock extends LLMMessageContentPartBase {
+  messageId?: string;
   type: 'text';
   text: string;
+}
+
+/**
+ * Represents a thinking block in a message.
+ * Contains the model's reasoning process (e.g., Claude's extended thinking).
+ *
+ * @example
+ * ```ts
+ * const thinkingBlock: LLMMessageContentPartThinkingBlock = {
+ *   type: 'thinking',
+ *   thinking: 'Let me analyze this step by step...'
+ * };
+ * ```
+ */
+export interface LLMMessageContentPartThinkingBlock extends LLMMessageContentPartBase {
+  messageId?: string;
+  type: 'thinking';
+  thinking: string;
+  signature?: string;
+}
+
+/**
+ * Represents a redacted thinking block in a message.
+ * Contains encrypted or obfuscated reasoning data.
+ *
+ * @example
+ * ```ts
+ * const redactedBlock: LLMMessageContentPartRedactedThinkingBlock = {
+ *   type: 'redacted_thinking',
+ *   data: 'base64encodeddata...'
+ * };
+ * ```
+ */
+export interface LLMMessageContentPartRedactedThinkingBlock extends LLMMessageContentPartBase {
+  messageId?: string;
+  type: 'redacted_thinking';
+  data: string;
 }
 
 /**
@@ -70,12 +108,31 @@ export interface LLMMessageContentPartTextBlock extends LLMMessageContentPartBas
  * ```
  */
 export interface LLMMessageContentPartImageBlock extends LLMMessageContentPartBase {
+  messageId?: string;
   type: 'image';
   source: {
     type: 'base64';
     media_type: LLMMessageContentPartImageBlockSourceMediaType;
     data: string;
   };
+}
+
+/**
+ * Represents an audio block in a message (OpenAI).
+ * References a previous audio response from the model.
+ *
+ * @example
+ * ```ts
+ * const audioBlock: LLMMessageContentPartAudioBlock = {
+ *   type: 'audio',
+ *   id: 'audio_abc123'
+ * };
+ * ```
+ */
+export interface LLMMessageContentPartAudioBlock extends LLMMessageContentPartBase {
+  messageId?: string;
+  type: 'audio';
+  id: string; // Unique identifier for a previous audio response from the model
 }
 
 /**
@@ -88,15 +145,16 @@ export interface LLMMessageContentPartImageBlock extends LLMMessageContentPartBa
  *   type: 'tool_use',
  *   id: 'tool-123',
  *   name: 'search_files',
- *   toolInput: { pattern: '*.ts' }
+ *   input: { pattern: '*.ts' }
  * };
  * ```
  */
 export interface LLMMessageContentPartToolUseBlock extends LLMMessageContentPartBase {
+  messageId?: string;
   type: 'tool_use';
   id: string;
+  input: object;
   name: string;
-  toolInput: Record<string, unknown>;
 }
 
 /**
@@ -107,17 +165,18 @@ export interface LLMMessageContentPartToolUseBlock extends LLMMessageContentPart
  * ```ts
  * const resultBlock: LLMMessageContentPartToolResultBlock = {
  *   type: 'tool_result',
- *   id: 'tool-123',
- *   success: true,
- *   content: { type: 'text', text: 'Found 5 files' }
+ *   tool_use_id: 'tool-123',
+ *   content: [{ type: 'text', text: 'Found 5 files' }],
+ *   is_error: false
  * };
  * ```
  */
 export interface LLMMessageContentPartToolResultBlock extends LLMMessageContentPartBase {
+  messageId?: string;
   type: 'tool_result';
-  id: string;
-  success: boolean;
-  content: LLMMessageContentPart | LLMMessageContentParts;
+  tool_use_id?: string;
+  content?: Array<LLMMessageContentPartTextBlock | LLMMessageContentPartImageBlock>;
+  is_error?: boolean;
 }
 
 /**
@@ -130,6 +189,7 @@ export interface LLMMessageContentPartToolResultBlock extends LLMMessageContentP
  *   switch(part.type) {
  *     case 'text': return part.text;
  *     case 'image': return part.source.data;
+ *     case 'thinking': return part.thinking;
  *     // ...
  *   }
  * }
@@ -137,7 +197,10 @@ export interface LLMMessageContentPartToolResultBlock extends LLMMessageContentP
  */
 export type LLMMessageContentPart =
   | LLMMessageContentPartTextBlock
+  | LLMMessageContentPartThinkingBlock
+  | LLMMessageContentPartRedactedThinkingBlock
   | LLMMessageContentPartImageBlock
+  | LLMMessageContentPartAudioBlock
   | LLMMessageContentPartToolUseBlock
   | LLMMessageContentPartToolResultBlock;
 
@@ -155,29 +218,25 @@ export type LLMMessageContentPart =
  */
 export type LLMMessageContentParts = LLMMessageContentPart[];
 
-export interface LLMToolResult {
-  toolResult: unknown;
-  bbResponse: { data: unknown };
-}
-
 /**
- * Contains complete information about a tool use, including results.
- * Used to track both the tool invocation and its outcome.
+ * Contains complete information about a tool use in an LLM answer.
+ * Tracks the tool invocation, input, and validation status.
  *
  * @example
  * ```ts
  * const toolUse: LLMAnswerToolUse = {
- *   id: 'tool-123',
- *   name: 'search_files',
- *   toolInput: {
- *     toolResult: { files: ['config.ts'] },
- *     bbResponse: { data: { success: true } }
- *   }
+ *   toolThinking: 'I need to search for TypeScript files...',
+ *   toolInput: { pattern: '*.ts' },
+ *   toolUseId: 'tool-123',
+ *   toolName: 'search_files',
+ *   toolValidation: { validated: true, results: 'Input is valid' }
  * };
  * ```
  */
 export interface LLMAnswerToolUse {
-  id: string;
-  name: string;
-  toolInput: LLMToolResult;
+  toolThinking?: string;
+  toolInput: Record<string, unknown>;
+  toolUseId: string;
+  toolName: string;
+  toolValidation: { validated: boolean; results: string };
 }

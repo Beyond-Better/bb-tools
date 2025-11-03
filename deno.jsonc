@@ -14,6 +14,8 @@
     "test": "deno test --allow-read --allow-write",
     "format": "deno fmt",
     "check": "deno check mod.ts",
+    "lint": "deno lint *.ts *.tsx",
+    "update-version": "deno run --allow-read --allow-write scripts/update-version.ts",
     "update-deps": "deno cache mod.ts"
   },
   "fmt": {

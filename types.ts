@@ -18,7 +18,10 @@ import type { LLMMessageContentPartImageBlockSourceMediaType } from './message.t
  *   inputTokens: 150,
  *   outputTokens: 80,
  *   totalTokens: 230,
- *   cacheCreationInputTokens: 100
+ *   cacheCreationInputTokens: 100,
+ *   cacheReadInputTokens: 50,
+ *   thoughtTokens: 20,
+ *   totalAllTokens: 400
  * };
  * ```
  */
@@ -28,6 +31,8 @@ export interface TokenUsage {
   totalTokens: number;
   cacheCreationInputTokens?: number;
   cacheReadInputTokens?: number;
+  thoughtTokens?: number;
+  totalAllTokens?: number;
 }
 
 /**
