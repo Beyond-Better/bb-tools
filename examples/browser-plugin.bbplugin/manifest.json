@@ -1,0 +1,11 @@
+{
+  "name": "browser-plugin",
+  "version": "1.0.0",
+  "author": "BB Team",
+  "description": "Browser integration tools for opening URLs and files in web browsers",
+  "license": "MIT",
+  "tools": ["open-in-browser.tool"],
+  "datasources": [],
+  "bbVersion": ">=0.9.0",
+  "keywords": ["browser", "url", "open", "web"]
+}
