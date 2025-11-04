@@ -1,0 +1,11 @@
+{
+  "name": "search-plugin",
+  "version": "1.0.0",
+  "author": "BB Team",
+  "description": "Project search and content discovery tools for Beyond Better",
+  "license": "MIT",
+  "tools": ["search-project.tool"],
+  "datasources": [],
+  "bbVersion": ">=0.9.0",
+  "keywords": ["search", "project", "files", "content"]
+}
