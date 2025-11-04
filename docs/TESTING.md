@@ -1,7 +1,7 @@
-# Testing Guidelines for BB Tools
+# Testing Guidelines for BB Plugins
 
-This document outlines testing requirements and best practices for the BB tools package. Following
-these guidelines ensures consistent quality and reliability across all tools.
+This document outlines testing requirements and best practices for BB plugins and tools. Following
+these guidelines ensures consistent quality and reliability across all plugin components.
 
 ## Core Principles
 
@@ -10,17 +10,21 @@ these guidelines ensures consistent quality and reliability across all tools.
    - Maintain consistent structure and style
    - Only modify what's necessary for new functionality
 
-2. **Test File Structure**
+2. **Plugin Structure**
    ```
-   your-tool/
-   ├── tool.ts             # Main tool implementation
-   ├── info.json          # Tool metadata and examples
-   ├── formatter.browser.tsx    # Browser-specific formatting
-   ├── formatter.console.ts     # Console-specific formatting
-   └── tool.test.ts       # Tool tests
+   your-plugin.bbplugin/
+   ├── manifest.json          # Plugin metadata
+   └── your-tool.tool/       # Tool directory
+       ├── tool.ts           # Main tool implementation
+       ├── info.json         # Tool metadata and examples
+       ├── formatter.browser.tsx  # Browser-specific formatting
+       ├── formatter.console.ts   # Console-specific formatting
+       └── tool.test.ts      # Tool tests
    ```
 
 3. **Test Coverage Requirements**
+   - Plugin manifest validation
+   - Tool discovery and loading
    - Basic functionality
    - Edge cases
    - Error scenarios

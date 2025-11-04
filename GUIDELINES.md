@@ -1,23 +1,28 @@
 ---
-title: BB Tools Framework Guidelines
+title: BB Plugin Framework Guidelines
 project: bb-tools
-version: 1.0.0
+version: 1.1.0
 created: 2025-11-02
-updated: 2025-11-02
+updated: 2025-11-04
 purpose: Guidelines for LLM collaboration on bb-tools framework development
+note: Project may be renamed to bb-plugins in future
 ---
 
-# BB Tools Framework Guidelines
+# BB Plugin Framework Guidelines
 
 ## Project Purpose and Scope
 
 ### Overview
-bb-tools (@beyondbetter/tools) is the core framework/library for building tools that work with the Beyond Better (BB) AI assistant. This project provides base classes, interfaces, types, and utilities needed to create properly structured BB tools.
+bb-tools (@beyondbetter/tools) is the core framework/library for building plugins that work with the Beyond Better (BB) AI assistant. This project provides base classes, interfaces, types, and utilities needed to create properly structured BB plugins containing tools and datasources.
 
 **IMPORTANT**: These guidelines are for working on the bb-tools framework itself, NOT for users/consumers of the framework. The audience is the LLM assisting with framework development, maintenance, and enhancement.
 
+**NOTE**: This project may be renamed to `bb-plugins` in the future to better reflect its purpose.
+
 ### Project Goals
 - Provide robust base classes (LLMTool) for tool creation
+- Define standardized plugin structure (.bbplugin format with manifest.json)
+- Support both tool and datasource components within plugins
 - Define standardized interfaces (IProjectEditor, IConversationInteraction)
 - Supply formatting utilities for browser (JSX/Preact) and console (ANSI)
 - Maintain comprehensive type definitions
@@ -34,16 +39,18 @@ bb-tools (@beyondbetter/tools) is the core framework/library for building tools 
 ### Project Scope
 **In Scope:**
 - Framework core classes and utilities
+- Plugin structure definition (.bbplugin format)
+- Plugin manifest schema and validation
 - Type definitions and interfaces
-- Example tools demonstrating framework usage
-- Documentation for tool creators
+- Example plugins demonstrating framework usage
+- Documentation for plugin creators
 - JSR publishing configuration
 
 **Out of Scope:**
-- Individual tools created by framework consumers
+- Individual plugins created by framework consumers
 - Beyond Better (BB) main application code
-- Tool runtime environment (handled by BB)
-- Tool distribution/marketplace
+- Plugin runtime environment (handled by BB)
+- Plugin distribution marketplace (future BB feature)
 
 ## Available Data Sources and Resources
 
@@ -77,24 +84,33 @@ deno.lock           # Dependency lock file
 
 #### Documentation (`docs/`)
 ```
-CREATING_TOOLS.md   # Guide for tool creators (consumers)
-TESTING.md          # Testing guidelines for tools
+CREATING_TOOLS.md   # Guide for plugin creators (consumers)
+TESTING.md          # Testing guidelines for plugins
 tools.md            # Comprehensive framework reference
+plugin-manifest-schema.json  # JSON schema for manifest.json
 ```
 
-#### Example Tools (`examples/`)
+#### Example Plugins (`examples/`)
 ```
 mod.ts              # Examples module exports
+search-plugin.bbplugin/
+  ├── manifest.json             # Plugin metadata
+  └── search-project.tool/
+      ├── tool.ts               # Tool implementation
+      ├── formatter.browser.tsx # Browser formatting
+      ├── formatter.console.ts  # Console formatting
+      ├── info.json             # Tool metadata
+      ├── types.ts              # Tool-specific types
+      ├── tool.test.ts          # Tool tests
+      └── README.md             # Tool documentation
+browser-plugin.bbplugin/
+  ├── manifest.json
+  └── open-in-browser.tool/
+      └── (same structure)
+
+# Legacy (deprecated, for backward compatibility):
 search_project.tool/
-  ├── tool.ts                   # Tool implementation
-  ├── formatter.browser.tsx     # Browser formatting
-  ├── formatter.console.ts      # Console formatting
-  ├── info.json                 # Tool metadata
-  ├── types.ts                  # Tool-specific types
-  ├── tool.test.ts              # Tool tests
-  └── README.md                 # Tool documentation
 open_in_browser.tool/
-  └── (same structure)
 ```
 
 #### Other Files
@@ -113,11 +129,13 @@ LICENSE             # MIT License
    - Update type definitions if interfaces change
    - Test with example tools after changes
 
-2. **Example Tool Development**
-   - Follow established tool structure
-   - Include all standard files (tool.ts, formatters, tests, README, info.json)
+2. **Example Plugin Development**
+   - Create .bbplugin directory with manifest.json
+   - Follow established plugin and tool structure
+   - Include all standard files (manifest.json, tool.ts, formatters, tests, README, info.json)
    - Use framework utilities consistently
    - Demonstrate specific framework features
+   - Show both single-tool and multi-tool plugin patterns
 
 3. **Documentation Updates**
    - Keep in sync with code changes
@@ -182,25 +200,57 @@ LICENSE             # MIT License
 - GitHub Actions workflow handles publishing
 - Follow semantic versioning
 
-## Tool Creation Guidelines
+## Plugin Creation Guidelines
 
-### Standard Tool Structure
-When creating example tools or documenting tool patterns:
+### Standard Plugin Structure
+When creating example plugins or documenting plugin patterns:
 
 ```
-tool_name.tool/
-├── tool.ts                   # Tool implementation (extends LLMTool)
-├── formatter.browser.tsx     # Browser UI formatting (JSX/Preact)
-├── formatter.console.ts      # Console output formatting (ANSI)
-├── info.json                 # Tool metadata and examples
-├── types.ts                  # Tool-specific types (if needed)
-├── tool.test.ts              # Comprehensive tests
-└── README.md                 # Tool documentation
+plugin-name.bbplugin/
+├── manifest.json             # Required: Plugin metadata
+├── tool-name.tool/
+│   ├── tool.ts               # Tool implementation (extends LLMTool)
+│   ├── formatter.browser.tsx # Browser UI formatting (JSX/Preact)
+│   ├── formatter.console.ts  # Console output formatting (ANSI)
+│   ├── info.json             # Tool metadata and examples
+│   ├── types.ts              # Tool-specific types (if needed)
+│   ├── tool.test.ts          # Comprehensive tests
+│   └── README.md             # Tool documentation
+└── another-tool.tool/        # Additional tools (optional)
+    └── (same structure)
 ```
+
+### Legacy Tool Structure (Deprecated)
+```
+tool_name.tool/               # Standalone tool (deprecated)
+├── tool.ts
+├── formatter.browser.tsx
+├── formatter.console.ts
+├── info.json
+├── types.ts
+├── tool.test.ts
+└── README.md
+```
+
+**Note**: While BB still supports standalone `.tool` directories for backward compatibility, all new development should use the `.bbplugin` structure.
+
+### Plugin Manifest Requirements
+
+**manifest.json** at plugin root:
+- **name**: Plugin package name (kebab-case)
+- **version**: Semantic version (major.minor.patch)
+- **author**: Creator name or organization
+- **description**: Brief plugin description
+- **license**: License identifier (e.g., MIT, Apache-2.0)
+- **tools**: Array of tool directory names (e.g., ["search-tool.tool"])
+- **datasources**: Array of datasource directory names (optional, future support)
+- **bbVersion**: Minimum BB version (e.g., ">=0.9.0")
+
+See [Plugin Manifest Schema](#plugin-manifest-schema) for complete specification.
 
 ### Key Implementation Requirements
 
-1. **Tool Class**
+1. **Tool Class** (within each .tool directory)
    - Extend `LLMTool` base class
    - Implement `inputSchema` getter (JSON Schema)
    - Implement `runTool` method
@@ -447,15 +497,17 @@ When reviewing or modifying framework code:
 6. **Consider examples**: Should example tools demonstrate this?
 7. **Test with examples**: Verify examples still work
 
-### Creating a New Example Tool
+### Creating a New Example Plugin
 
-1. **Create directory**: `examples/tool_name.tool/`
-2. **Implement tool.ts**: Extend LLMTool, implement required methods
-3. **Create formatters**: Both browser.tsx and console.ts
-4. **Add info.json**: Metadata and examples
-5. **Write tests**: Comprehensive coverage
-6. **Document in README**: Usage and implementation details
-7. **Export from examples/mod.ts**: Make available to framework users
+1. **Create plugin directory**: `examples/plugin-name.bbplugin/`
+2. **Create manifest.json**: Plugin metadata with name, version, author, description, tools list
+3. **Create tool directory**: `examples/plugin-name.bbplugin/tool-name.tool/`
+4. **Implement tool.ts**: Extend LLMTool, implement required methods
+5. **Create formatters**: Both browser.tsx and console.ts
+6. **Add info.json**: Tool metadata and examples
+7. **Write tests**: Comprehensive coverage for each tool
+8. **Document in README**: Plugin overview and tool usage
+9. **Export from examples/mod.ts**: Make available to framework users
 
 ### Updating Documentation
 
@@ -477,22 +529,53 @@ When reviewing or modifying framework code:
 
 ## Framework-Specific Considerations
 
+### Plugin Manifest Schema
+
+The manifest.json schema is defined in `docs/plugin-manifest-schema.json`. Key requirements:
+
+**Required Fields:**
+- `name`: Kebab-case plugin identifier
+- `version`: Semantic version string
+- `description`: Plugin description (10-500 chars)
+- `tools`: Array of tool directory names
+
+**Optional Fields:**
+- `author`: Creator name/organization
+- `license`: License identifier (SPDX format)
+- `datasources`: Array of datasource directory names
+- `bbVersion`: Minimum BB version (semver range)
+- `homepage`: Plugin homepage URL
+- `repository`: Repository information object
+- `keywords`: Array of discovery keywords
+
+**Validation:**
+- All listed tools must exist as directories
+- Directory names must match exactly (case-sensitive)
+- Version must follow semver format
+- Plugin name must be valid kebab-case
+
 ### Understanding the Framework Architecture
 
 **Core Concepts:**
+- **Plugin Package**: .bbplugin directory containing manifest and components
+- **Plugin Manifest**: manifest.json with metadata and component lists
 - **LLMTool**: Base class providing common functionality
+- **Tool Components**: Individual .tool directories within plugin
+- **Datasource Components**: Individual .datasource directories (future support)
 - **IProjectEditor**: Interface for file/project operations (consumed by tools)
 - **IConversationInteraction**: Interface for conversation context (consumed by tools)
 - **Formatters**: Dual formatting for browser UI and console output
 - **Tool Metadata**: info.json provides tool information to BB
 
-**Tool Lifecycle:**
-1. Tool registered with BB
-2. LLM decides to use tool based on capabilities
-3. BB validates input against `inputSchema`
-4. Tool's `runTool` method executes
-5. Results formatted for display (browser or console)
-6. Results returned to LLM
+**Plugin Lifecycle:**
+1. Plugin discovered in configured directories
+2. Manifest validated by BB
+3. Tools registered with BB from plugin
+4. LLM decides to use tool based on capabilities
+5. BB validates input against `inputSchema`
+6. Tool's `runTool` method executes
+7. Results formatted for display (browser or console)
+8. Results returned to LLM
 
 ### Maintaining Backward Compatibility
 
@@ -805,6 +888,17 @@ Deno.test({
 ```
 
 ## Version History
+
+### 1.1.0 (2025-11-04)
+- Updated for new .bbplugin plugin structure
+- Added plugin manifest requirements and schema
+- Documented plugin packaging and distribution
+- Updated all documentation for plugin-first approach
+- Added plugin-manifest-schema.json
+- Marked standalone .tool structure as deprecated
+- Added datasource component support (future)
+- Updated example structure to show plugin packages
+- Note: Project may be renamed to bb-plugins
 
 ### 1.0.1 (2025-11-02)
 - Enhanced with details from docs/CREATING_TOOLS.md

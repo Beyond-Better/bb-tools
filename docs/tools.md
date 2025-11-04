@@ -1,13 +1,24 @@
-# BB Tools Reference
+# BB Plugin Framework Reference
 
-This document provides a comprehensive reference for the BB tools framework, including tool types,
-interfaces, implementation patterns, and styling guidelines.
+This document provides a comprehensive reference for the BB plugin framework, including plugin structure,
+tool types, interfaces, implementation patterns, and styling guidelines.
 
-## Tool Framework Overview
+## Plugin Framework Overview
 
-The BB tools framework provides a structured way to create tools that can be used by AI assistants.
-Each tool:
+The BB plugin framework provides a structured way to create and distribute tools and datasources that can be used by AI assistants.
 
+### Plugin Structure
+
+Plugins are packaged as `.bbplugin` directories containing:
+- **manifest.json**: Required plugin metadata
+- **Tool components**: One or more `.tool` directories
+- **Datasource components**: Optional `.datasource` directories (future support)
+
+**Note**: Standalone `.tool` directories are deprecated but still supported for backward compatibility.
+
+### Tool Components
+
+Each tool within a plugin:
 - Extends the `LLMTool` base class
 - Implements specific interfaces
 - Provides both browser and console formatting
