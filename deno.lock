@@ -13,8 +13,9 @@
     "npm:ajv@8.17.1": "8.17.1",
     "npm:common-tags@1.8.2": "1.8.2",
     "npm:node-fetch@3.3.2": "3.3.2",
-    "npm:open@*": "10.1.0",
+    "npm:open@*": "10.2.0",
     "npm:open@10.1.0": "10.1.0",
+    "npm:open@10.2.0": "10.2.0",
     "npm:preact@*": "10.25.3",
     "npm:preact@10.22.0": "10.22.0",
     "npm:preact@10.25.3": "10.25.3"
@@ -154,6 +155,15 @@
         "is-wsl"
       ]
     },
+    "open@10.2.0": {
+      "integrity": "sha512-YgBpdJHPyQ2UE5x+hlSXcnejzAvD0b22U2OuAP+8OnlJT+PjWPxtgmGqKKc+RgTM63U9gN0YzrYc71R2WT/hTA==",
+      "dependencies": [
+        "default-browser",
+        "define-lazy-prop",
+        "is-inside-container",
+        "wsl-utils"
+      ]
+    },
     "preact@10.22.0": {
       "integrity": "sha512-RRurnSjJPj4rp5K6XoP45Ui33ncb7e4H7WiOHVpjbkvqvA3U+N8Z6Qbo0AE6leGYBV66n8EhEaFixvIu3SkxFw=="
     },
@@ -180,6 +190,12 @@
     },
     "web-streams-polyfill@3.3.3": {
       "integrity": "sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw=="
+    },
+    "wsl-utils@0.1.0": {
+      "integrity": "sha512-h3Fbisa2nKGPxCpm89Hk33lBLsnaGBvctQopaBSOW/uIs6FTe1ATyAnKFJrzVs9vpGdsTe73WF3V4lIsk4Gacw==",
+      "dependencies": [
+        "is-wsl"
+      ]
     }
   },
   "remote": {

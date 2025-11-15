@@ -105,6 +105,7 @@ export type {
   LLMToolFormatterDestination,
   LLMToolInputSchema,
   LLMToolLogEntryFormattedResult,
+  LLMToolMetadata,
   LLMToolRunBbResponse,
   LLMToolRunBbResponseData,
   LLMToolRunResult,

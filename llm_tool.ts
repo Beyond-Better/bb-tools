@@ -142,6 +142,38 @@ export interface LLMToolLogEntryFormattedResult {
   preview: string | JSX.Element;
 }
 
+export interface LLMToolMetadata {
+  toolId: string;
+  name: string;
+  version: string;
+  protocolType: 'bb' | 'mcp';
+  loadedFrom: 'builtin' | 'plugin' | 'mcp';
+  author: string;
+  license: string;
+  description: string;
+  purpose: string;
+  path?: string; // is set by code, not part of manifest
+  toolSets?: string | string[]; //defaults to 'core'
+  category?: string | string[];
+  capabilities?: string | string[];
+  enabled?: boolean; //defaults to true
+  mutates?: boolean; //defaults to true
+  deprecated?: boolean; //defaults to false
+  replacedBy?: string; //when deprecated is true
+  error?: string;
+  config?: unknown;
+  mcpData?: Record<string, unknown>; //LLMToolMCPConfig
+  pluginData?: {
+    pluginName: string;
+    version: string;
+    author: string;
+    description: string;
+    license: string;
+    bbVersion: string;
+  };
+  examples?: Array<{ description: string; input: unknown }>;
+}
+
 /**
  * Base class for all LLM tools in the BB Tools Framework.
  * Provides core functionality for input validation, execution, and result formatting.
@@ -187,12 +219,19 @@ export interface LLMToolLogEntryFormattedResult {
  * ```
  */
 abstract class LLMTool {
+  public toolId: string;
+  public features: LLMToolFeatures = {};
+
   constructor(
     public name: string,
     public description: string,
     public toolConfig: LLMToolConfig,
-    public features: LLMToolFeatures = {},
-  ) {}
+    public metadata: LLMToolMetadata,
+  ) {
+    this.toolId = metadata.toolId || `${metadata.loadedFrom || 'builtin'}:${metadata.name}`;
+    this.features = { mutates: metadata.mutates || false };
+    //logger.info(`LLMTool: Constructing tool ${name}`);
+  }
 
   // deno-lint-ignore require-await
   public async init(): Promise<LLMTool> {
