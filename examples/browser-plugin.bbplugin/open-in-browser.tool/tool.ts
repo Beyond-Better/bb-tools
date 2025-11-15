@@ -33,7 +33,7 @@ import LLMTool, {
   type LLMToolLogEntryFormattedResult,
   type LLMToolRunResult,
 } from 'jsr:@beyondbetter/tools';
-import open, { apps } from 'npm:open@10.1.0';
+import open, { apps } from 'npm:open@10.2.0';
 
 import {
   formatLogEntryToolResult as formatLogEntryToolResultBrowser,
@@ -82,7 +82,7 @@ export default class LLMToolOpenInBrowser extends LLMTool {
    * These map to specific browser applications on the system.
    * @private
    */
-  private readonly predefinedBrowsers = ['chrome', 'firefox', 'edge', 'safari'] as const;
+  private readonly predefinedBrowsers = ['chrome', 'brave', 'firefox', 'edge', 'safari'] as const;
   /**
    * Maximum number of URLs that can be opened in one operation.
    * Limits batch operations to prevent resource exhaustion.
@@ -113,13 +113,14 @@ export default class LLMToolOpenInBrowser extends LLMTool {
           type: 'array',
           items: { type: 'string' },
           description:
-            'Array of URLs or file paths to open. Local paths will be converted to file:// URLs. Maximum of 6 URLs allowed.',
+            `Array of URLs or file paths to open. Local paths will be converted to file:// URLs. Maximum of ${this.maxUrls} URLs allowed.`,
           maxItems: this.maxUrls,
         },
         browser: {
           type: 'string',
-          description:
-            'Browser to use. Can be one of the predefined browsers (chrome, firefox, edge, safari) or any other browser name. If not specified or "default", uses system default browser.',
+          description: `Browser to use. Can be one of the predefined browsers (${
+            this.predefinedBrowsers.join(', ')
+          }) or any other browser name. If not specified or "default", uses system default browser.`,
           default: 'default',
         },
       },
@@ -178,6 +179,8 @@ export default class LLMToolOpenInBrowser extends LLMTool {
         ? apps.browser
         : browser === 'chrome'
         ? apps.chrome
+        : browser === 'brave'
+        ? apps.brave
         : browser === 'firefox'
         ? apps.firefox
         : browser === 'edge'

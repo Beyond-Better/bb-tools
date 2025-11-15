@@ -4,19 +4,27 @@
 [![JSR](https://jsr.io/badges/@beyondbetter/tools)](https://jsr.io/@beyondbetter/tools)
 [![JSR Score](https://jsr.io/badges/@beyondbetter/tools/score)](https://jsr.io/@beyondbetter/tools)
 
-Core tool infrastructure for building BB (Beyond Better) AI assistant tools. This package provides
-the base classes, interfaces, and types needed to create tools that can be used with the BB AI
-assistant.
+Core plugin infrastructure for building BB (Beyond Better) AI assistant plugins. This package provides
+the base classes, interfaces, types, and plugin structure needed to create plugins containing tools and
+datasources that can be used with the BB AI assistant.
+
+**Note**: This package may be renamed to `@beyondbetter/plugins` in the future.
 
 ## Features
 
-- Base tool class with standardized interfaces
-- Browser and console formatting with consistent styling
-- Comprehensive type definitions
-- Project and conversation management interfaces
-- Built-in input validation using JSON Schema
-- Extensive testing utilities
-- Tool metadata and examples support
+- **Plugin Structure**: Structured `.bbplugin` format with manifest support
+- **Multi-Component Support**: Package multiple tools and datasources together
+- **Base Tool Class**: Standardized LLMTool base class with consistent interfaces
+- **Dual Formatting**: Browser (JSX/Preact) and console (ANSI) output formatting
+- **Type Safety**: Comprehensive TypeScript type definitions
+- **Project & Conversation**: Standardized interfaces for file and conversation management
+- **Input Validation**: Built-in JSON Schema validation
+- **Testing Utilities**: Extensive testing helpers and utilities
+- **Metadata Support**: Plugin and tool metadata with examples
+- **Version Management**: Semantic versioning with BB compatibility checks
+- **Distribution Ready**: Double-click installation support (.bbplugin files)
+
+**Note**: Standalone `.tool` directories are deprecated but still supported for backward compatibility.
 
 ## Installation
 
@@ -30,18 +38,37 @@ import { LLMTool } from "jsr:@beyondbetter/tools";
 
 ## Quick Start
 
-1. Create tool structure:
+### Plugin Structure
+
+1. Create plugin package:
 
 ```
-my-tool/
-├── tool.ts             # Main implementation
-├── info.json          # Tool metadata
-├── formatter.browser.tsx    # Browser formatting
-├── formatter.console.ts     # Console formatting
-└── tool.test.ts       # Tests
+my-plugin.bbplugin/
+├── manifest.json       # Plugin metadata (required)
+└── my-tool.tool/      # Tool directory
+    ├── tool.ts        # Main implementation
+    ├── info.json      # Tool metadata
+    ├── formatter.browser.tsx  # Browser formatting
+    ├── formatter.console.ts   # Console formatting
+    └── tool.test.ts   # Tests
 ```
 
-2. Define tool metadata (info.json):
+2. Create plugin manifest (manifest.json):
+
+```json
+{
+  "name": "my-plugin",
+  "version": "1.0.0",
+  "author": "Your Name",
+  "description": "Description of your plugin",
+  "license": "MIT",
+  "tools": ["my-tool.tool"],
+  "datasources": [],
+  "bbVersion": ">=0.9.0"
+}
+```
+
+3. Define tool metadata (my-tool.tool/info.json):
 
 ```json
 {
@@ -61,7 +88,7 @@ my-tool/
 }
 ```
 
-3. Implement the tool (tool.ts):
+4. Implement the tool (my-tool.tool/tool.ts):
 
 ```typescript
 import LLMTool, {
@@ -123,7 +150,7 @@ class MyTool extends LLMTool {
 }
 ```
 
-4. Implement browser formatting (formatter.browser.tsx):
+5. Implement browser formatting (my-tool.tool/formatter.browser.tsx):
 
 ```typescript
 /** @jsxImportSource preact */
@@ -154,7 +181,7 @@ export function formatLogEntryToolUse(
 }
 ```
 
-5. Implement console formatting (formatter.console.ts):
+6. Implement console formatting (my-tool.tool/formatter.console.ts):
 
 ```typescript
 import { stripIndents } from 'common-tags';
@@ -183,7 +210,19 @@ export function formatLogEntryToolUse(
 }
 ```
 
-6. Use the tool:
+7. Install and use the plugin:
+
+```bash
+# Copy plugin to BB plugins directory
+cp -r my-plugin.bbplugin ~/.config/bb/plugins/
+
+# Or double-click the .bbplugin directory (macOS/Windows)
+# BB will show installation dialog
+
+# Restart BB API to load the plugin
+```
+
+8. Use the tool:
 
 ```typescript
 const tool = new MyTool();
@@ -202,9 +241,11 @@ const result = await tool.runTool(
 
 ## Documentation
 
-- [Creating Tools](./docs/CREATING_TOOLS.md) - Detailed guide for creating new tools
+- [Creating Plugins](./docs/CREATING_TOOLS.md) - Detailed guide for creating new plugins
 - [Testing Guide](./docs/TESTING.md) - Testing requirements and guidelines
-- [Tools Reference](./docs/tools.md) - Comprehensive tool framework documentation
+- [Plugin Framework Reference](./docs/tools.md) - Comprehensive framework documentation
+- [Plugin Manifest Schema](./docs/plugin-manifest-schema.json) - JSON schema for manifest.json
+- [Guidelines](./GUIDELINES.md) - Framework development guidelines
 
 ## Core Interfaces
 
@@ -240,8 +281,9 @@ Conversation management interface:
 
 1. Fork the repository
 2. Create your feature branch
-3. Follow the [Creating Tools](./docs/CREATING_TOOLS.md) guide
-4. Ensure tests pass using \`deno test\`
+3. Follow the [Creating Plugins](./docs/CREATING_TOOLS.md) guide
+4. Follow the [Guidelines](./GUIDELINES.md) for framework development
+5. Ensure tests pass using \`deno test\`
 5. Submit a pull request
 
 ## Testing
