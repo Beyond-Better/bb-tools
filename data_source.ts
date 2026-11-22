@@ -5,6 +5,10 @@
  * Note: These are simplified versions of the full BB implementation types.
  * They expose only what tools need to work with data sources.
  *
+ * KEEP IN SYNC with bb-saas: mirrors `api/src/dataSources/dataSourceConnection.ts` and
+ * `shared/src/types/dataSource.types.ts` as seen by tools. When those change, update this file and
+ * publish a new version; see docs/keeping-in-sync.md (which lists known drift).
+ *
  * @module
  */
 

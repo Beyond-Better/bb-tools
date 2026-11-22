@@ -10,6 +10,10 @@ import type { IProjectEditor } from './project_editor.ts';
  * Note: This interface represents capabilities available to tools during execution.
  * It is extracted from BB's LLMConversationInteraction implementation.
  *
+ * KEEP IN SYNC with bb-saas: mirrors `api/src/llms/interactions/conversationInteraction.ts` and
+ * `baseInteraction.ts` as seen by tools. When those change, update this file and publish a new
+ * version; see docs/keeping-in-sync.md (which lists known drift).
+ *
  * @module
  */
 

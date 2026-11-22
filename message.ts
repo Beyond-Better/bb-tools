@@ -3,6 +3,10 @@
  * Defines the core types used to represent different kinds of content
  * in messages, including text, images, tool uses, and tool results.
  *
+ * KEEP IN SYNC with bb-saas: mirrors `api/src/llms/llmMessage.ts` as seen by tools. When that
+ * changes, update this file and publish a new version; see docs/keeping-in-sync.md (which lists
+ * known drift).
+ *
  * @module
  */
 

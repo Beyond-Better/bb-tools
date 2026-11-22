@@ -100,6 +100,7 @@ export type {
 
 // Tool types
 export type {
+  ApiRunsIn,
   LLMToolConfig,
   LLMToolFeatures,
   LLMToolFormatterDestination,
@@ -112,7 +113,12 @@ export type {
   LLMToolRunResultContent,
   LLMToolRunResultFormatter,
   LLMToolRunToolResponse,
+  LLMToolStatusContext,
   LLMToolUseInputFormatter,
+  ResidencyPolicy,
+  SystemPromptAdditionConfig,
+  ToolConfigSchema,
+  ToolResultBudget,
 } from './llm_tool.ts';
 
 // Formatting utilities
