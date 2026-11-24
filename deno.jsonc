@@ -1,6 +1,6 @@
 {
   "name": "@beyondbetter/tools",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "license": "MIT",
   "exports": {
     ".": "./mod.ts",
@@ -15,6 +15,7 @@
     "format": "deno fmt",
     "check": "deno check mod.ts",
     "lint": "deno lint *.ts *.tsx",
+	"build:plugin": "deno run --allow-read --allow-write --allow-env --allow-net --allow-run --unstable-bundle scripts/build-plugin.ts",
     "update-version": "deno run --allow-read --allow-write scripts/update-version.ts",
     "update-deps": "deno cache mod.ts"
   },

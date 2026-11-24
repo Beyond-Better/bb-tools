@@ -5,6 +5,10 @@ import type { LLMMessageContentPartImageBlockSourceMediaType } from './message.t
  * Provides fundamental data structures for tracking token usage, file metadata,
  * tool statistics, and conversation state.
  *
+ * KEEP IN SYNC with bb-saas: mirrors `shared/src/types.ts` as seen by tools. When that changes,
+ * update this file and publish a new version; see docs/keeping-in-sync.md (which lists known
+ * drift).
+ *
  * @module
  */
 

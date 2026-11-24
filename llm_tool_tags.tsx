@@ -36,6 +36,10 @@
  * ].join('\n');
  * ```
  *
+ * KEEP IN SYNC with bb-saas: mirrors `api/src/llms/llmToolTags.tsx` as seen by tools. When that
+ * changes, update this file and publish a new version; see docs/keeping-in-sync.md (which lists
+ * known drift).
+ *
  * @module
  */
 

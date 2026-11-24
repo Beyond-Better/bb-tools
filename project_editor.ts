@@ -7,6 +7,10 @@ import type { DataSourceConnection } from './data_source.ts';
  * Provides interfaces and types for managing project files, tracking changes,
  * and maintaining project state.
  *
+ * KEEP IN SYNC with bb-saas: mirrors `api/src/editor/projectEditor.ts` as seen by tools. When that
+ * changes, update this file and publish a new version; see docs/keeping-in-sync.md (which lists
+ * known drift).
+ *
  * @module
  */
 
