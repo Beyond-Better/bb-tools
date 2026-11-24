@@ -6,7 +6,7 @@
  * DO NOT EDIT MANUALLY - Changes will be overwritten
  *
  * Source: deno.jsonc (root)
- * Last updated: 2025-11-03T05:58:58.232Z
+ * Last updated: 2026-11-24T00:31:55.729Z
  */
 
 /**
@@ -20,7 +20,7 @@
  * Current package version
  * @constant
  */
-export const VERSION = '0.1.2';
+export const VERSION = '0.1.4';
 
 /**
  * Package name
